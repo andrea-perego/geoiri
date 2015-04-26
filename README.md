@@ -9,6 +9,7 @@ For a description and installation instructions of GeoIRI see the [documentation
 ## Content
 
 * [`demo/`](demo/): folder containing a set of files that can be used to quickly set up a GeoIRI API.
+* [`examples/`](examples/): folder containing examples of GeoIRI RDF ouput.
 * [`LICENCE`](LICENCE): the GeoIRI licence.
 * [`README.md`](README.md): this document.
 * [`src/`](src/): folder containing the files implementing the GeoIRI API
