@@ -106,7 +106,6 @@
     <aside>
     </aside>
     <footer><p>GeoIRI @ GitHub: <a href="https://github.com/andrea-perego/geoiri">https://github.com/andrea-perego/geoiri</a></p></footer>
-
     <script type="text/javascript">
       function onEachFeature(feature, layer) {
         if (feature.properties &amp;&amp; feature.properties.popupContent) {
