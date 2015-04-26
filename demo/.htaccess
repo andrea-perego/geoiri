@@ -1,3 +1,4 @@
+DirectoryIndex index.html index.php
 RewriteEngine On
 # Specify here the absolute path from the document root to the GeoIRI directory
 RewriteBase /geoiri/
