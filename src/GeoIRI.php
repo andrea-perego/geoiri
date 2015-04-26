@@ -130,7 +130,8 @@ class GeoIRI {
   private $fileFormats = array(
       "html" => array("HTML", "text/html", "", "http://www.w3.org/TR/html5/"),
       "rdf" => array("RDF/XML", "application/rdf+xml", "", "http://www.w3.org/TR/rdf-syntax-grammar/"),
-      "nt" => array("N-Triples", "text/plain", "", "http://www.w3.org/TR/n-triples/"),
+//      "nt" => array("N-Triples", "text/plain", "", "http://www.w3.org/TR/n-triples/"),
+      "nt" => array("N-Triples", "application/n-triples", "", "http://www.w3.org/TR/n-triples/"),
       "ttl" => array("Turtle", "text/turtle", "", "http://www.w3.org/TR/turtle/"),
       "n3" => array("N3", "text/n3", "Notation 3", "http://www.w3.org/TeamSubmission/n3/"),
       "jsonld" => array("JSON-LD*", "application/ld+json", "JSON Linked Data - From rdf-translator.appspot.com", "http://www.w3.org/TR/json-ld/"),
