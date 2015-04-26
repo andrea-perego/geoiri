@@ -12,10 +12,12 @@
     </nav>
     <section>
       <form id="geoiri" action="." method="get" onsubmit="getGeoIRI();return false;">
-        <h1><label for="geometry-wkt">Geometry (WKT)</label>
-        <span style="float:right"><label for="srid">EPSG : </label>
-        <input type="text" title="Coordinate Reference System" id="srid" value="4326" maxlength="6" size="6"/>
-        <input type="submit" id="getgeoiri" value="Get GeoIRI"/></span></h1>
+        <h1>
+          <label for="geometry-wkt">Geometry (WKT)</label>
+          <span style="float:right"><label for="srid">EPSG : </label>
+          <input type="text" title="Coordinate Reference System" id="srid" value="4326" maxlength="6" size="6"/>
+          <input type="submit" id="getgeoiri" value="Get GeoIRI"/></span>
+        </h1>
         <textarea id="geometry-wkt" title="Type or copy &amp; paste a WKT-encoded geometry">MULTIPOLYGON(((40 40, 20 45, 45 30, 40 40)),((20 35, 45 20, 30 5, 10 10, 10 30, 20 35),(30 20, 20 25, 20 15, 30 20)))</textarea>
       </form>
     </section>

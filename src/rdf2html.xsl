@@ -22,13 +22,13 @@
     xmlns:vann    = "http://purl.org/vocab/vann/"
     xmlns:voaf    = "http://purl.org/vocommons/voaf#"
     xmlns:locn    = "http://www.w3.org/ns/locn#"
-  	version="1.0">
+    version="1.0">
 
   <xsl:output method="html"
               doctype-system="about:legacy-compact"
               media-type="text/html"
               omit-xml-declaration="yes"
-			        encoding="UTF-8"
+              encoding="UTF-8"
               indent="yes" />
 
 <!-- Parameter for the code of the language used. -->              
@@ -84,13 +84,15 @@
     <nav>
     </nav>
     <section>
-	    <form id="geoiri" action="../../.." method="get" onsubmit="getGeoIRI();return false;">
-  		  <h1><label for="geometry-wkt">Geometry (WKT)</label>
-         <span style="float:right;"><label for="srid">EPSG : </label>
-         <input type="text" title="Coordinate Reference System" id="srid" value="{$srs}" maxlength="6" size="6"/>
-			    <input type="submit" style="margin-left:5px;" id="getgeoiri" value="Get GeoIRI"/></span></h1>
-  	    <textarea id="geometry-wkt" title="Type or copy &amp; paste a WKT-encoded geometry"><xsl:value-of select="$wkt"/></textarea>
-		  </form>
+      <form id="geoiri" action="../../.." method="get" onsubmit="getGeoIRI();return false;">
+        <h1>
+          <label for="geometry-wkt">Geometry (WKT)</label>
+          <span style="float:right;"><label for="srid">EPSG : </label>
+          <input type="text" title="Coordinate Reference System" id="srid" value="{$srs}" maxlength="6" size="6"/>
+          <input type="submit" style="margin-left:5px;" id="getgeoiri" value="Get GeoIRI"/></span>
+         </h1>
+        <textarea id="geometry-wkt" title="Type or copy &amp; paste a WKT-encoded geometry"><xsl:value-of select="$wkt"/></textarea>
+      </form>
     </section>
     <section>
       <div>

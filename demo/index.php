@@ -34,10 +34,12 @@
     </nav>
     <section>
       <form id="geoiri" action="." method="get" onsubmit="getGeoIRI();return false;">
-        <h1><label for="geometry-wkt">Geometry (WKT)</label>
-        <span style="float:right"><label for="srid">EPSG : </label>
-        <input type="text" title="Coordinate Reference System" id="srid" value="<?php echo $defaultCRS; ?>" maxlength="6" size="6"/>
-        <input type="submit" id="getgeoiri" value="Get GeoIRI"/></span></h1>
+        <h1>
+          <label for="geometry-wkt">Geometry (WKT)</label>
+          <span style="float:right"><label for="srid">EPSG : </label>
+          <input type="text" title="Coordinate Reference System" id="srid" value="<?php echo $defaultCRS; ?>" maxlength="6" size="6"/>
+          <input type="submit" id="getgeoiri" value="Get GeoIRI"/></span>
+        </h1>
         <textarea id="geometry-wkt" title="Type or copy &amp; paste a WKT-encoded geometry"><?php echo $defaultGeometry; ?></textarea>
       </form>
     </section>
