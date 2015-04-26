@@ -31,15 +31,21 @@
 			        encoding="UTF-8"
               indent="yes" />
 
+<!-- Parameter for the code of the language used. -->              
+              
   <xsl:param name="l">
     <xsl:text>en</xsl:text>
   </xsl:param>
 
+<!-- Parameters passed to the XSLT by GeoIRI. -->  
+  
   <xsl:param name="wkt"/>
   <xsl:param name="srs"/>
   <xsl:param name="srsdescr"/>
   <xsl:param name="geojson"/>
 
+<!-- Main template -->  
+  
   <xsl:template match="/">
   
     <xsl:param name="title" select="rdf:RDF/rdf:Description[foaf:primaryTopicOf]/rdfs:label"/>
@@ -67,50 +73,11 @@
     <xsl:copy-of select="$alternate"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>            
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />    
-<!--    
-    <link rel="stylesheet" href="http://dev.openlayers.org/theme/default/style.css" type="text/css" />
--->    
     <link rel="stylesheet" href="../../../css/style.css" type="text/css" />
     <link rel="stylesheet" href="../../../css/map.css" type="text/css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-<!--    
-    <script type="text/javascript" src="http://dev.openlayers.org/OpenLayers.js"></script>
-    <script type="text/javascript">
-      var map, overview, layer;
-      function init(){
-        map = new OpenLayers.Map( 'map' , { projection: new OpenLayers.Projection("EPSG:900913") } );
-        overview = new OpenLayers.Control.OverviewMap( { maximized:true } );
-        map.addControl(overview);
-        map.addControl(new OpenLayers.Control.MousePosition());
-        map.addControl(new OpenLayers.Control.ScaleLine());
-
-        layer = new OpenLayers.Layer.OSM();
-        map.addLayer(layer);
-        var featurecollection = {
-          "title": "Geometry (WKT): $this->format['wkt']",
-          "type": "FeatureCollection",
-          "features": [
-            {"geometry": {
-              "type": "GeometryCollection",
-              "geometries": [
-                <xsl:value-of select="$geojson"/>
-              ]
-            },
-            "type": "Feature",
-            "properties": {}}
-          ]
-        };
-        var geojson_format = new OpenLayers.Format.GeoJSON();
-        var vector_layer = new OpenLayers.Layer.Vector();
-        map.addLayer(vector_layer);
-        vector_layer.addFeatures(geojson_format.read(featurecollection));
-        map.zoomToExtent(vector_layer.getDataExtent());
-      }
-    </script>
--->    
     <script type="text/javascript" src="../../../js/script.js">
     </script>
-   
   </head>
   <body>
     <header><h1>GeoIRI</h1></header>
@@ -139,12 +106,11 @@
     <footer><p>GeoIRI @ GitHub: <a href="https://github.com/andrea-perego/geoiri">https://github.com/andrea-perego/geoiri</a></p></footer>
 
     <script type="text/javascript">
-function onEachFeature(feature, layer) {
-// does this feature have a property named popupContent?
-  if (feature.properties &amp;&amp; feature.properties.popupContent) {
-    layer.bindPopup(feature.properties.popupContent);
-  }
-}    
+      function onEachFeature(feature, layer) {
+        if (feature.properties &amp;&amp; feature.properties.popupContent) {
+          layer.bindPopup(feature.properties.popupContent);
+        }
+      }    
       var featurecollection = {
         "title": "Geometry (WKT): <xsl:value-of select="$wkt"/> - EPSG: <xsl:value-of select="$srs"/> <xsl:value-of select="$srsdescr"/>",
         "type": "FeatureCollection",
@@ -163,7 +129,6 @@ function onEachFeature(feature, layer) {
       };
       var geometry = L.geoJson(featurecollection, { onEachFeature : onEachFeature });
       var map = L.map('map').setView([0,0],1);
-//      var map = L.map('map');
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         maxZoom: 18
@@ -171,8 +136,6 @@ function onEachFeature(feature, layer) {
       geometry.addTo(map);
       map.fitBounds(geometry.getBounds());
     </script>
-    
-    
    </body>
 </html>
     
