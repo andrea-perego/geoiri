@@ -1,0 +1,63 @@
+textarea {
+  height:4em;
+}
+#map {
+  width:680px;
+  height:340px;
+  border:1px solid #ccc;
+}
+div.olControlMousePosition {
+  left:3px;
+}
+.olControlAttribution {
+  top:3px;
+}
+#format-list {
+  margin-bottom:1em; 
+  text-align:center;
+}
+#format-list a {
+  display:inline-block;
+  padding:5px;
+  text-decoration:none;
+  -moz-box-shadow: 2px 2px 1px #99ff99;
+  -moz-border-radius: 5px;
+  box-shadow: 2px 2px 1px #99ff99;
+  border-radius: 5px;
+}
+#format-list a:hover {
+ background-color: #ccffcc;
+}
+#crs-description-box {
+  border:inset 1px  #99ff99;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+#crs-description-box table {
+  border-collapse: collapse;
+  margin:4px;
+}
+#crs-description-box tbody {
+  display:block;
+  height:300px;
+  overflow:auto;
+}
+#crs-description-box td {
+  margin:0;
+  vertical-align:middle;
+  border-top:solid 1px #99ff99;
+}
+#crs-description-box input,#crs-description-box label {
+  display:block;
+  cursor:pointer;
+  margin:0;
+  padding:6px;
+}
+#selected-crs-box {
+  padding:6px;
+  text-align:center;
+}
+#crs-description-box tr:hover {
+  background-color:#ccffcc;
+  border:inset 1px  #99ff99;
+}

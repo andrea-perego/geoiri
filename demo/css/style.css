@@ -1,0 +1,53 @@
+body {
+  font-family: Lucida, sans-serif; 
+  font-size: 10pt; 
+  color: #004400;
+  width:760px;
+  border: solid 1px #99ff99;
+  box-shadow: 10px 10px 5px #99ff99;
+  margin:30px auto;
+}
+body header, body #header {
+  background-color: #006600; 
+  color: #ffffff; 
+  font-weight: normal; 
+  margin: 0; 
+  padding: 1em .5em;
+  text-align: center;
+}
+section {
+  margin:40px;
+}
+footer {
+  border-top: dotted 1px #99ff99;
+  margin:20px 40px;
+}
+header h1, #header h1 {
+  font-size:1.5em;
+  margin:0px;
+}
+h1,h2 {
+  font-weight:normal;
+}
+input,textarea {
+  color: #004400;
+}
+input {
+  font-size:1em;
+}
+/*
+#getgeoiri {
+  float:right;
+  margin:10px 0;
+}
+*/
+textarea {
+  font-family: Lucida Console, monospace;
+  font-size:1.4em;
+  width: 100%;
+  resize:vertical;
+  height:10em;
+}
+a {
+  color: #004400;
+}
