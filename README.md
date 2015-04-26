@@ -4,7 +4,7 @@ GeoIRI is an experimental implementation of an URI/IRI space meant to denote arb
 
 This work builds upon the pioneering approach adopted by [Ian Davis](http://iandavis.com/) at [PlaceTime.com](http://placetime.com/) for spatial coordinates, where two-dimensional points in the [WGS84 datum](http://en.wikipedia.org/wiki/World_Geodetic_System) are encoded directly in the relevant URI, which is then resolved to different representations based on HTTP content negotiation.
 
-For a description and installation instructions of GeoIRI see the [documentation](documentation).
+For a description and installation instructions of GeoIRI see the [GeoIRI wiki](./wiki/).
 
 ## Content
 
