@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:prv="http://purl.org/net/provenance/ns#" xmlns:gsp="http://www.opengis.net/ont/geosparql#" xmlns:sf="http://www.opengis.net/ont/sf#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:schema="http://schema.org/">
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0)">
+    <rdf:type rdf:resource="http://purl.org/net/provenance/ns#DataItem"/>
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-04-26T20:38:19+02:00</dcterms:issued>
+    <foaf:primaryTopic rdf:resource="http://some.site/geoiri/id/geometry/4326/point(0_0)"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).html"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).rdf"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).nt"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).ttl"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).n3"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).jsonld"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).txt"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).gml"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).json"/>
+    <dcterms:hasFormat rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0).kml"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).html">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">HTML</rdfs:label>  
+    <dcterms:description xml:lang="en">HTML document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">text/html</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/text/html"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TR/html5/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).rdf">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">RDF/XML</rdfs:label>  
+    <dcterms:description xml:lang="en">RDF/XML document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">application/rdf+xml</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/application/rdf+xml"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TR/rdf-syntax-grammar/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).nt">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">N-Triples</rdfs:label>  
+    <dcterms:description xml:lang="en">N-Triples document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">text/plain</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/text/plain"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TR/n-triples/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).ttl">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">Turtle</rdfs:label>  
+    <dcterms:description xml:lang="en">Turtle document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">text/turtle</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/text/turtle"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TR/turtle/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).n3">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">N3</rdfs:label>
+    <rdfs:comment xml:lang="en">Notation 3</rdfs:comment>  
+    <dcterms:description xml:lang="en">N3 document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">text/n3</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/text/n3"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TeamSubmission/n3/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).jsonld">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">JSON-LD*</rdfs:label>
+    <rdfs:comment xml:lang="en">JSON Linked Data - From rdf-translator.appspot.com</rdfs:comment>  
+    <dcterms:description xml:lang="en">JSON-LD* document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">application/ld+json</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/application/ld+json"/>
+    <dcterms:conformsTo rdf:resource="http://www.w3.org/TR/json-ld/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).txt">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">WKT (GeoSPARQL)</rdfs:label>
+    <rdfs:comment xml:lang="en">Well-Known Text</rdfs:comment>  
+    <dcterms:description xml:lang="en">WKT (GeoSPARQL) document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">text/plain</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/text/plain"/>
+    <dcterms:conformsTo rdf:resource="http://www.opengeospatial.org/standards/sfa/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).gml">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">GML (GeoSPARQL)</rdfs:label>
+    <rdfs:comment xml:lang="en">Geography Markup Language</rdfs:comment>  
+    <dcterms:description xml:lang="en">GML (GeoSPARQL) document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">application/gml+xml</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/application/gml+xml"/>
+    <dcterms:conformsTo rdf:resource="http://www.opengeospatial.org/standards/gml/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).json">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">GeoJSON</rdfs:label>  
+    <dcterms:description xml:lang="en">GeoJSON document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">application/vnd.geo+json</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/application/vnd.geo+json"/>
+    <dcterms:conformsTo rdf:resource="http://www.geojson.org/geojson-spec.html"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/doc/geometry/4326/point(0_0).kml">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <rdfs:label xml:lang="en">KML</rdfs:label>
+    <rdfs:comment xml:lang="en">Keyhole Markup Language</rdfs:comment>  
+    <dcterms:description xml:lang="en">KML document about the following WKT-encoded geometry: POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</dcterms:description>
+    <dcterms:format rdf:parseType="Resource">
+      <rdf:value rdf:datatype="http://purl.org/dc/terms/IMT">application/vnd.google-earth.kml+xml</rdf:value>
+    </dcterms:format>
+    <dcterms:format rdf:resource="http://purl.org/NET/mediatypes/application/vnd.google-earth.kml+xml"/>
+    <dcterms:conformsTo rdf:resource="http://www.opengeospatial.org/standards/kml/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://some.site/geoiri/id/geometry/4326/point(0_0)">
+    <foaf:primaryTopicOf rdf:resource="http://some.site/geoiri/doc/geometry/4326/point(0_0)"/>
+    <rdfs:label xml:lang="en">Geometry (WKT): POINT(0 0) &#x2013; EPSG:4326 (WGS 84)</rdfs:label>
+    <owl:sameAs rdf:resource="http://some.site/geoiri/id/geometry/4326/point(0_0)#geosparql"/>
+    <owl:sameAs rdf:resource="http://some.site/geoiri/id/geometry/4326/point(0_0)#wgs84"/>
+    <owl:sameAs rdf:resource="http://some.site/geoiri/id/geometry/4326/point(0_0)#schema.org"/>
+    <owl:sameAs rdf:resource="http://placetime.com/geopoint/wgs84/X0Y0"/>
+    <owl:sameAs rdf:resource="http://geohash.org/7zzzzzzzzzzzzzzzzzzz"/>
+    <owl:sameAs rdf:resource="geo:0,0;u=0;crs=wgs84"/>
+  </rdf:Description>
+  <sf:Point rdf:about="http://some.site/geoiri/id/geometry/4326/point(0_0)#geosparql">
+    <gsp:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[<http://www.opengis.net/def/crs/EPSG/0/4326> POINT(0 0)]]></gsp:asWKT>
+    <gsp:asGML rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Point xmlns:gml="http://www.opengis.net/gml" srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos srsDimension="2">0 0</gml:pos></gml:Point>]]></gsp:asGML>
+  </sf:Point>
+  <geo:Point rdf:about="http://some.site/geoiri/id/geometry/4326/point(0_0)#wgs84">
+    <geo:lat_long rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0,0</geo:lat_long>
+    <geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</geo:lat>
+    <geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</geo:long>
+  </geo:Point>
+  <schema:GeoCoordinates rdf:about="http://some.site/geoiri/id/geometry/4326/point(0_0)#schema.org">
+    <schema:latitude rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</schema:latitude>
+    <schema:longitude rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</schema:longitude>
+  </schema:GeoCoordinates>
+</rdf:RDF>
