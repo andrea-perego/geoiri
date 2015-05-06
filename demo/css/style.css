@@ -35,12 +35,6 @@ input,textarea {
 input {
   font-size:1em;
 }
-/*
-#getgeoiri {
-  float:right;
-  margin:10px 0;
-}
-*/
 textarea {
   font-family: Lucida Console, monospace;
   font-size:1.4em;
