@@ -51,7 +51,7 @@
     <xsl:param name="title" select="rdf:RDF/rdf:Description[foaf:primaryTopicOf]/rdfs:label"/>
     <xsl:param name="alternate">
       <xsl:for-each select="rdf:RDF/rdf:Description[dcterms:format]">
-        <link rel="alternate" title="{rdfs:comment}" href="{@rdf:about}" type="{dcterms:format/rdf:value}" />
+        <link rel="alternate" title="{rdfs:label}" href="{@rdf:about}" type="{dcterms:format/rdf:value}" />
       </xsl:for-each>
     </xsl:param>
     <xsl:param name="formatList">
