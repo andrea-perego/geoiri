@@ -13,6 +13,11 @@ require_once('MDB2.php');
 
 class GeoIRI {
 
+// The path to the directory where GeoIRI.php and related resources are available
+// The actual value is set in function save().
+
+  private $classdir = null;
+
   private $toolname = "GeoIRI";
   function getToolName() {
     return $this->toolname;
@@ -88,9 +93,10 @@ class GeoIRI {
       "geopoint" => array("PlaceTime.com", "http://placetime.com/geopoint/wgs84/","")
   );
 
-// URL of the XSLT that generates the HTML presentation of the geometry from its RDF/XML representation.  
+// URL/path of the XSLT that generates the HTML presentation of the geometry from its RDF/XML representation.
+// The default value for this variable is set in function save().  
   
-  private $xsluri = "./rdf2html.xsl";
+  private $xsluri = null;
 
 // Use this function to change the path of the XSLT and/or to use a different XSLT.  
   
@@ -380,6 +386,7 @@ class GeoIRI {
     $this->format["nt"] = $graph->serialise("ntriples");
     $this->format["ttl"] = $graph->serialise("turtle");
     $this->format["n3"] = $graph->serialise("n3");
+//    $this->format["jsonld"] = $graph->serialise("jsonld");
 
     $geojson = $this->format["geojsonas4326"];
 //    $geojson = $this->format["geojsonassmp"];
@@ -418,6 +425,10 @@ class GeoIRI {
   }
 
   function save() {
+    $this->classdir = realpath(dirname(__FILE__)) .'/';
+      if ($this->xsluri == '') {
+      $this->xsluri = $this->classdir . 'rdf2html.xsl';
+    }
     $docUriWithFileExt = 'http://' . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
     $this->docUri = preg_replace("/\)\.(.*)$/", ")", $docUriWithFileExt);
     $docUri = $this->docUri;
@@ -567,10 +578,12 @@ class GeoIRI {
         case 1:
           header("Content-type: " . $contentType);
 // The "if" statement is meant to specify how to deal with formats not natively supported by GeoIRI
+
           if ($contentType == "application/ld+json") {
             header('Location: http://rdf-translator.appspot.com/convert/detect/json-ld/' . urlencode($docUri));
             exit;
           }
+
           if (preg_match("/xml$/", $contentType)) {
             echo $xmlDecl;
           }
