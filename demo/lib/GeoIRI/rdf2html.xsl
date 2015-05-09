@@ -101,7 +101,7 @@
           <xsl:copy-of select="$formatList"/>
         </div>
       </div>
-      <div id="map" class="smallmap"></div>
+      <div id="map"></div>
     </section>
     <aside>
     </aside>
