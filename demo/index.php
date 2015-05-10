@@ -5,8 +5,8 @@
   $includepaths = array(
     "./lib/", 
     "./lib/GeoIRI/", 
-    "./lib/easyrdf-0.9.0/lib/", 
-    "./lib/conNeg_2.0.4/PHP5.x/"
+    "./lib/easyrdf-0.6.2/lib/", 
+    "./lib/conNeg_2.0.2/PHP5.x/"
   );
 
   set_include_path(get_include_path() . PATH_SEPARATOR . join(PATH_SEPARATOR, $includepaths));
