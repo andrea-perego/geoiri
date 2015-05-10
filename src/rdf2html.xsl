@@ -42,7 +42,8 @@
   <xsl:param name="wkt"/>
   <xsl:param name="srs"/>
   <xsl:param name="srsdescr"/>
-  <xsl:param name="geojson"/>
+  <xsl:param name="geojsonas4326"/>
+  <xsl:param name="geojsonassmp"/>
 
 <!-- Main template -->  
   
@@ -76,25 +77,27 @@
     <link rel="stylesheet" href="../../../css/style.css" type="text/css" />
     <link rel="stylesheet" href="../../../css/map.css" type="text/css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <script type="text/javascript" src="../../../js/script.js">
-    </script>
+    <script type="text/javascript" src="../../../js/script.js"></script>
   </head>
   <body>
     <header><h1>GeoIRI</h1></header>
     <nav>
     </nav>
-    <section>
+    <section id="input-box">
       <form id="geoiri" action="../../.." method="get" onsubmit="getGeoIRI();return false;">
         <h1>
           <label for="geometry-wkt">Geometry (WKT)</label>
-          <span style="float:right;"><label for="srid">EPSG : </label>
-          <input type="text" title="Coordinate Reference System" id="srid" value="{$srs}" maxlength="6" size="6"/>
-          <input type="submit" style="margin-left:5px;" id="getgeoiri" value="Get GeoIRI"/></span>
-         </h1>
+          <span style="float:right;">
+            <a class="info" href="http://www.epsg-registry.org/" target="_new" title="Click here for the list of EPSG coordinate reference systems.">i</a>
+            <label for="srid">EPSG : </label>
+            <input type="text" title="Coordinate Reference System" id="srid" value="{$srs}" maxlength="6" size="6"/>
+            <input type="submit" style="margin-left:5px;" id="getgeoiri" value="Get GeoIRI"/>
+          </span>
+        </h1>
         <textarea id="geometry-wkt" title="Type or copy &amp; paste a WKT-encoded geometry"><xsl:value-of select="$wkt"/></textarea>
       </form>
     </section>
-    <section>
+    <section id="map-box">
       <div>
         <p>Representations of this geometry are also available in the following encodings:</p>
         <div id="format-list">
@@ -119,7 +122,7 @@
           {"geometry": {
             "type": "GeometryCollection",
             "geometries": [
-              <xsl:value-of select="$geojson"/>
+              <xsl:value-of select="$geojsonas4326"/>
             ]
           },
           "type": "Feature",

@@ -29,6 +29,20 @@ header h1, #header h1 {
 h1,h2 {
   font-weight:normal;
 }
+#input-box a.info {
+  background-color:#006600;
+  color:#ffffff;
+  display:inline-block;
+  padding:0 6px;
+  margin-right:5px;
+  vertical-align:middle;
+  font-family:serif;
+  font-size:.7em;
+  font-weight:bold;
+  border:2px solid #99ff99;
+  border-radius:10px;
+  text-decoration:none;
+}
 input,textarea {
   color: #004400;
 }
