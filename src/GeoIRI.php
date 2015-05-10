@@ -388,9 +388,11 @@ class GeoIRI {
     $this->format["n3"] = $graph->serialise("n3");
 //    $this->format["jsonld"] = $graph->serialise("jsonld");
 
-    $geojson = $this->format["geojsonas4326"];
-//    $geojson = $this->format["geojsonassmp"];
-    
+// If using Leaflet.js
+    $geojsonas4326 = $this->format["geojsonas4326"];
+// If using OpenLayers
+    $geojsonassmp  = $this->format["geojsonassmp"];
+/*    
     $htmlTitle = '<h1 id="title" title="Geometry encoded as Well-Known Text">Geometry (WKT): <br/><code title="' . $this->format["wkt"] . '">' . $this->format["wkt"] . '</code></h1><h2>Coordinate reference system: EPSG:' . $srs . $srsdescr . '</h2>';
     $htmlTitleHead = 'Geometry (WKT): ' . $this->format["wkt"] . ' &ndash; EPSG:' . $srs . $srsdescr;
     $toolInfo = $this->getToolInfo();
@@ -404,7 +406,7 @@ class GeoIRI {
     }
 
     $formatList = join(" ",$altFormats);
-
+*/
 // HTML presentation    
     
     $xml = new DOMDocument;
@@ -419,7 +421,8 @@ class GeoIRI {
     $proc->setParameter("", "wkt", $string);
     $proc->setParameter("", "srs", $srs);
     $proc->setParameter("", "srsdescr", $srsdescr);
-    $proc->setParameter("", "geojson", $geojson);
+    $proc->setParameter("", "geojsonas4326", $geojsonas4326);
+    $proc->setParameter("", "geojsonassmp", $geojsonassmp);
     $this->format["html"] = $proc->transformToXML($xml);
 
   }
