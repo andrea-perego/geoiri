@@ -7,7 +7,7 @@ function getGeoIRI() {
 }
 // Removes unnecessary white spaces from the WKT string.
 function normaliseWKT(wkt) {
-  return wkt.trim().replace(/[\s]*([\(\),])[\s]*/g, '$1').replace(/[\s]+/g, ' ');
+  return wkt.trim().replace(/[\s]*([\(\),])[\s]*/g, '$1').replace(/[\s]+/g, ' ').toLowerCase();
 }
 // Encodes the WKT string to be used in the URI path.
 function encodeWKT(wkt) {
