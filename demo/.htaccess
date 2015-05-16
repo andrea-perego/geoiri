@@ -2,7 +2,12 @@ DirectoryIndex index.html index.php
 RewriteEngine On
 # Specify here the absolute path from the document root to the GeoIRI directory
 RewriteBase /geoiri/
+# Adds a trailing slash after /geometry, if missing.
 RewriteRule ^(id|doc)/geometry$ ./$1/geometry/ [R=301,L]
+# Adds a trailing slash after /geometry/[SRS], if missing.
 RewriteRule ^(id|doc)/geometry/([\d]+)$ ./$1/geometry/$2/ [R=301,L]
+# Performs an HTTP 303 redirection from the URI of the geometry (/geometry/id/*) 
+# to the URI its description /geometry/doc/*).
 RewriteRule ^id(/.+) ./doc$1 [R=303,L]
+# Maps the URI path to the URI query string submitted to the GeoIRI API.
 RewriteRule ^(id|doc)/geometry(/([^/]*)(/(([^/]*[\d]+[\)]*\))(\.(.+))?)?)?)?$ geometry/?srs=$3&georep=$6&format=$8 [NC,PT]
