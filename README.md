@@ -12,8 +12,9 @@ For a description and installation instructions of GeoIRI see the [wiki](http://
 * [`examples/`](examples/): folder containing examples of GeoIRI RDF ouput.
 * [`LICENCE`](LICENCE): the GeoIRI licence.
 * [`README.md`](README.md): this document.
-* [`src/`](src/): folder containing the files implementing the GeoIRI API
-  * [`src/GeoIRI.php`](src/GeoIRI.php): file contaning the PHP class implementing GeoIRI
+* [`screenshots/`](screenshots/): folder containing screenshots of the GeoIRI API frontend.
+* [`src/`](src/): folder containing the files implementing the GeoIRI API.
+  * [`src/GeoIRI.php`](src/GeoIRI.php): file contaning the PHP class implementing GeoIRI.
   * [`src/rdf2html.xsl`](src/rdf2html.xsl): XSLT used by GeoIRI to generate the HTML presentation of a given geometry from its RDF/XML representation.
   * [`src/.htaccess`](src/.htaccess): Apache configuration file including the URL re-writing rules for the GeoIRI API.
 
