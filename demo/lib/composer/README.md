@@ -4,6 +4,7 @@ This folder includes the [Composer](https://getcomposer.org/)'s setup file ([`co
 
 To install these libraries:
 
+* Move to this folder
 * Download Composer. E.g.: `curl -s https://getcomposer.org/installer | php`
 * Run `php composer.phar install`
 
