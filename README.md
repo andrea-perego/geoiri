@@ -1,6 +1,6 @@
 # GeoIRI
 
-GeoIRI is an experimental implementation of a URI/IRI space meant to denote arbitrary geometries, in arbitrary coordinate reference systems, by resolvable URI/IRIs.
+GeoIRI is an experimental implementation of a URI/IRI space meant to denote arbitrary geometries, in arbitrary coordinate reference systems, by resolvable HTTP URI/IRIs.
 
 This work builds upon the pioneering approach adopted by [Ian Davis](http://iandavis.com/) at [PlaceTime.com](http://placetime.com/) for spatial coordinates, where two-dimensional points in the [WGS84 datum](http://en.wikipedia.org/wiki/World_Geodetic_System) are encoded directly in the relevant URI, which is then resolved to different representations based on HTTP content negotiation.
 
