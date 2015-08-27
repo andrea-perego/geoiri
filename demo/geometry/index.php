@@ -11,26 +11,28 @@ $password = '';
 // The database host specification: hostname[:port]
 $hostspec = 'localhost';
 
-// Specify the relative path/URL of the required libraries.
+// Load the required libraries.
+
+require('../lib/composer/vendor/autoload.php');
+
+// Specify the relative path/URL of the GeoIRI library.
 
 $includepaths = array(
-  "../lib/",
-  "../lib/GeoIRI/",
-  "../lib/easyrdf-0.6.2/lib/",
-  "../lib/conNeg_2.0.2/PHP5.x/"
+  "../lib/GeoIRI/"
 );
 
 set_include_path(get_include_path() . PATH_SEPARATOR . join(PATH_SEPARATOR, $includepaths));
 
 // Specify the relative path/URL of the XSLT to be used to generate the HTML output from RDF/XML.
-
-$xsluri = "../lib/GeoIRI/rdf2html.xsl";
+// This is needed only if not using the default GeoIRI XSLT.
+//$xsluri = "../lib/GeoIRI/rdf2html.xsl";
 
 require_once("GeoIRI.php");
 
 $geoiri = new GeoIRI;
 $geoiri->setDSN($username,$password,$database,$hostspec);
-$geoiri->setXSLT4HTML($xsluri);
+// If not using the default GeoIRI XSLT to generate the HTML output.
+//$geoiri->setXSLT4HTML($xsluri);
 echo $geoiri->save();
 
 ?>

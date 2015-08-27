@@ -1,12 +1,13 @@
-﻿<?php
+<?php
 
-// Specify the relative path/URL of the required libraries.
+// Load the required libraries.
+
+  require('./lib/composer/vendor/autoload.php');
+
+// Specify the relative path/URL of the GeoIRI library.
 
   $includepaths = array(
-    "./lib/", 
-    "./lib/GeoIRI/", 
-    "./lib/easyrdf-0.6.2/lib/", 
-    "./lib/conNeg_2.0.2/PHP5.x/"
+    "../lib/GeoIRI/"
   );
 
   set_include_path(get_include_path() . PATH_SEPARATOR . join(PATH_SEPARATOR, $includepaths));

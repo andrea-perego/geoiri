@@ -7,8 +7,12 @@
 
 ********************************************************************/
 
-require_once('conNeg.inc.php');
-require_once('EasyRdf.php');
+// If using conNeg = 3.0.0:
+use ptlis\ConNeg\Negotiate;
+// If using conNeg < 3.0.0:
+//require_once('conNeg.inc.php');
+// If using EasyRDF < 0.7.0:
+//require_once('EasyRdf.php');
 require_once('MDB2.php');
 
 class GeoIRI {
@@ -140,7 +144,7 @@ class GeoIRI {
       "nt" => array("N-Triples", "application/n-triples", "", "http://www.w3.org/TR/n-triples/"),
       "ttl" => array("Turtle", "text/turtle", "", "http://www.w3.org/TR/turtle/"),
       "n3" => array("N3", "text/n3", "Notation 3", "http://www.w3.org/TeamSubmission/n3/"),
-      "jsonld" => array("JSON-LD*", "application/ld+json", "JSON Linked Data - From rdf-translator.appspot.com", "http://www.w3.org/TR/json-ld/"),
+      "jsonld" => array("JSON-LD", "application/ld+json", "JSON Linked Data", "http://www.w3.org/TR/json-ld/"),
       "txt" => array("WKT (GeoSPARQL)", "text/plain", "Well-Known Text", "http://www.opengeospatial.org/standards/sfa/"),
       "gml" => array("GML (GeoSPARQL)", "application/gml+xml", "Geography Markup Language", "http://www.opengeospatial.org/standards/gml/"),
       "kml" => array("KML", "application/vnd.google-earth.kml+xml", "Keyhole Markup Language", "http://www.opengeospatial.org/standards/kml/"),
@@ -386,7 +390,7 @@ class GeoIRI {
     $this->format["nt"] = $graph->serialise("ntriples");
     $this->format["ttl"] = $graph->serialise("turtle");
     $this->format["n3"] = $graph->serialise("n3");
-//    $this->format["jsonld"] = $graph->serialise("jsonld");
+    $this->format["jsonld"] = $graph->serialise("jsonld");
 
 // If using Leaflet.js
     $geojsonas4326 = $this->format["geojsonas4326"];
@@ -565,8 +569,15 @@ class GeoIRI {
         exit($this->page);
       }
     } else {
-      $bestContentType = conNeg::mimeBest($appTypes);
-      $contentType = $bestContentType;
+// If using conNeg < 3.0.0:
+//      $bestContentType = conNeg::mimeBest($appTypes);
+// If using conNeg = 3.0.0
+      $negotiator = new Negotiate();
+      $bestContentType = $negotiator->mimeBest($_SERVER['HTTP_ACCEPT'], join($appTypes["type"], ",") . ";q=1");
+// If using conNeg < 3.0.0:
+//      $contentType = $bestContentType;
+// If using conNeg = 3.0.0
+      $contentType = $bestContentType->getType();
       if ($contentType == null) {
         header($_SERVER["SERVER_PROTOCOL"] . " 406 Not Acceptable");
       }
@@ -581,12 +592,12 @@ class GeoIRI {
         case 1:
           header("Content-type: " . $contentType);
 // The "if" statement is meant to specify how to deal with formats not natively supported by GeoIRI
-
+/*
           if ($contentType == "application/ld+json") {
             header('Location: http://rdf-translator.appspot.com/convert/detect/json-ld/' . urlencode($docUri));
             exit;
           }
-
+*/
           if (preg_match("/xml$/", $contentType)) {
             echo $xmlDecl;
           }
