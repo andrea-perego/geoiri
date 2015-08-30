@@ -7,7 +7,7 @@
 // Specify the relative path/URL of the GeoIRI library.
 
   $includepaths = array(
-    "../lib/GeoIRI/"
+    "./lib/GeoIRI/"
   );
 
   set_include_path(get_include_path() . PATH_SEPARATOR . join(PATH_SEPARATOR, $includepaths));
