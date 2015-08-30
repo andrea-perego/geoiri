@@ -87,7 +87,8 @@ class GeoIRI {
       "sf" => "http://www.opengis.net/ont/sf#",
       "gml" => "http://www.opengis.net/gml",
       "kml" => "http://www.opengis.net/kml/2.2",
-      "mt"  => "http://purl.org/NET/mediatypes/",
+//      "mt"  => "http://purl.org/NET/mediatypes/",
+      "mt"  => "http://www.iana.org/assignments/media-types/",
       "void" => "http://rdfs.org/ns/void#"
   );
   
