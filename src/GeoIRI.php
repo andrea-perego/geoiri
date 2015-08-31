@@ -13,7 +13,7 @@ use ptlis\ConNeg\Negotiate;
 //require_once('conNeg.inc.php');
 // If using EasyRDF < 0.7.0:
 //require_once('EasyRdf.php');
-require_once('MDB2.php');
+//require_once('MDB2.php');
 
 class GeoIRI {
 
@@ -51,21 +51,40 @@ class GeoIRI {
   }
   
   private $dsn = array(
+/*  
         'phptype' => 'pgsql',
         'username' => 'geoiri',
         'password' => 'geoiri',
         'hostspec' => 'localhost',
         'database' => 'geoiri'
+*/        
+        'host' => 'localhost',
+        'port' => '5432',
+        'dbname' => 'geoiri',
+        'user' => 'geoiri',
+        'password' => ''
   );
   private $dboptions = array(
-        'debug' => 2,
-        'portability' => MDB2_PORTABILITY_ALL,
+//        'debug' => 2,
+//        'portability' => MDB2_PORTABILITY_ALL,
   );
-  function setDSN($username,$password,$database,$hostspec) {
+//  function setDSN($username,$password,$database,$hostspec) {
+  function setDSN($user,$password,$dbname,$host,$port = 5432) {
+/*
     $this->dsn['username'] = $username;
     $this->dsn['password'] = $password;
     $this->dsn['database'] = $database;
     $this->dsn['hostspec'] = $hostspec;
+*/    
+    $this->dsn['host'] = $host;
+    $this->dsn['port'] = $port;
+    $this->dsn['dbname'] = $dbname;
+    $this->dsn['user'] = $user;
+    $this->dsn['password'] = $password;
+  }
+
+  private function getConnectionString() {
+    return "host='" . $this->dsn['host'] . "' port='" . $this->dsn['port'] . "' dbname='" . $this->dsn['dbname'] . "' user='" . $this->dsn['user'] . "' password='" . $this->dsn['password'] . "'";
   }
 
   private $idUri = null;
@@ -176,17 +195,29 @@ class GeoIRI {
   }
 
   private function getEncodings() {
+    $mdb2 = pg_connect($this->getConnectionString()) or die();
+/*  
     $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
     if (PEAR::isError($mdb2)) {
       die($mdb2->getMessage());
     }
+*/    
+    $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
+    if (!$res || pg_num_rows($res) == 0) {
+      header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+      $this->createPage404();
+      exit($this->page);
+    }
+/*
     $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
     if (PEAR::isError($res) || $res->numRows() == 0) {
       header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
       $this->createPage404();
       exit($this->page);
     }
-    while (($row = $res->fetchRow())) {
+*/    
+    while ($row = pg_fetch_row($res)) {
+//    while (($row = $res->fetchRow())) {
       $matches = array();
       preg_match("/^[^\[]+\[\"([^\"]+)\"/",$row[1],$matches);
       $srsdescr = null;
@@ -194,10 +225,13 @@ class GeoIRI {
         $srsdescr = " (" . $matches[1] . ")";
       }
     }
+    $mdb2 = pg_connect($this->getConnectionString()) or die();
+/*    
     $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
     if (PEAR::isError($mdb2)) {
       die($mdb2->getMessage());
     }
+*/    
     $string = $this->georep;
     $srs = $this->srs;
     $defsrs = $this->defsrs;
@@ -221,12 +255,27 @@ class GeoIRI {
 
 // Check whether the relevant geometry type is supported by KML
 
+    $res = pg_query($mdb2, "SELECT " . $call["kml"]);
+// Always check that result is not an error
+    if (!$res) {
+      $call["kml"] = "'' AS kml";
+    }
+/*
     $res = & $mdb2->query("SELECT " . $call["kml"]);
 // Always check that result is not an error
     if (PEAR::isError($res)) {
       $call["kml"] = "'' AS kml";
     }
+*/
 
+    $res = pg_query($mdb2, "SELECT " . join(",", $call));
+// Always check that result is not an error
+    if (!$res) {
+      header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+      $this->createPage404();
+      exit($this->page);
+    }
+/*    
     $res = & $mdb2->query("SELECT " . join(",", $call));
 // Always check that result is not an error
     if (PEAR::isError($res)) {
@@ -234,13 +283,16 @@ class GeoIRI {
       $this->createPage404();
       exit($this->page);
     }
-    while (($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC))) {
+*/    
+    while ($row = pg_fetch_assoc($res)) {
+//    while (($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC))) {
       foreach ($row as $name => $value) {
         $this->format[$name] = $value;
       }
     }
 // Disconnect
-    $mdb2->disconnect();
+    pg_close($mdb2);
+//    $mdb2->disconnect();
     $ns = $this->ns;
     if ($this->format["kml"] != "") {
       $this->availableFileFormats[] = "kml";
@@ -446,12 +498,17 @@ class GeoIRI {
     $this->getHttpParams();
     if ($this->georep == null) {
       if ($this->srs == null) {
+        $mdb2 = pg_connect($this->getConnectionString) or die();
+/*
         $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
         if (PEAR::isError($mdb2)) {
           die($mdb2->getMessage());
         }
-        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext");
-        if (PEAR::isError($res)) {
+*/        
+        $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext") or die();
+//        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext");
+        if (!$res) {
+//        if (PEAR::isError($res)) {
           header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
           $this->createPage404();
           exit($this->page);
@@ -482,17 +539,23 @@ class GeoIRI {
         }
       }
       else {
+        $mdb2 = pg_connect($this->getConnectionString) or die();
+/*        
         $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
         if (PEAR::isError($mdb2)) {
           die($mdb2->getMessage());
         }
-        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
-        if (PEAR::isError($res) || $res->numRows() == 0) {
+*/        
+        $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext") or die();
+//        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
+        if (!$res || pg_num_rows($res) == 0) {
+//        if (PEAR::isError($res) || $res->numRows() == 0) {
           header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
           $this->createPage404();
           exit($this->page);
         }
-        while (($row = $res->fetchRow())) {
+        while ($row = pg_fetch_row($res)) {
+//        while (($row = $res->fetchRow())) {
           preg_match("/^[^\[]+\[\"([^\"]+)\"/",$row[1],$matches);
           $srsdescr = null;
           if (isset($matches[1])) {

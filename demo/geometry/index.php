@@ -3,13 +3,17 @@
 // Specify the connection parameters to the database.
 
 // The name of the database
-$database = 'geoiri';
+$dbname = 'geoiri';
 // The username of the database owner
-$username = 'geoiri';
+$user = 'geoiri';
 // The password of the database owner
 $password = '';
-// The database host specification: hostname[:port]
-$hostspec = 'localhost';
+// The database host name specification
+$host = 'localhost';
+// The port used by PostgreSQL. This parameter is optional, and must be specified only if 
+// different from the default port (i.e., 5432)
+//$port = '5432';
+
 
 // Load the required libraries.
 
@@ -30,7 +34,11 @@ set_include_path(get_include_path() . PATH_SEPARATOR . join(PATH_SEPARATOR, $inc
 require_once("GeoIRI.php");
 
 $geoiri = new GeoIRI;
-$geoiri->setDSN($username,$password,$database,$hostspec);
+// When using the default port (i.e., 5432):
+$geoiri->setDSN($user,$password,$dbname,$host);
+// If the port is different from the default one:
+//$geoiri->setDSN($user,$password,$dbname,$host,$port);
+
 // If not using the default GeoIRI XSLT to generate the HTML output.
 //$geoiri->setXSLT4HTML($xsluri);
 echo $geoiri->save();
