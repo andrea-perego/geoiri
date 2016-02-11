@@ -1,11 +1,11 @@
 <?php
 
-/********************************************************************
+/*************************************************************************
 
-  Copyright (c) 2015, Andrea Perego <http://about.me/andrea.perego>
+  Copyright (c) 2015'2016, Andrea Perego <http://about.me/andrea.perego>
   Licence: http://opensource.org/licenses/MIT
 
-********************************************************************/
+*************************************************************************/
 
 // If using conNeg = 3.0.0:
 use ptlis\ConNeg\Negotiate;
