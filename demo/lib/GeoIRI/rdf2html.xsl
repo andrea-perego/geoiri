@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
 
-  # Copyright (c) 2015, Andrea Perego <http://about.me/andrea.perego>
+  # Copyright (c) 2015-2016, Andrea Perego <http://about.me/andrea.perego>
   # Licence: http://opensource.org/licenses/MIT
   
 -->
