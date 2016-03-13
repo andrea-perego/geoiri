@@ -2,10 +2,10 @@
 
 /*************************************************************************
 
-  Copyright (c) 2015'2016, Andrea Perego <http://about.me/andrea.perego>
+  Copyright (c) 2015-2016, Andrea Perego <http://about.me/andrea.perego>
   Licence: http://opensource.org/licenses/MIT
 
-*************************************************************************/
+**************************************************************************/
 
 // If using conNeg = 3.0.0:
 use ptlis\ConNeg\Negotiate;
@@ -26,22 +26,22 @@ class GeoIRI {
   function getToolName() {
     return $this->toolname;
   }
-  
+
   private $toolacronym = null;
   function getToolAcronym() {
     return $this->toolacronym;
   }
-  
+
   private $toolversion = "0.0.1";
   function getToolVersion() {
     return $this->toolversion;
   }
-  
+
   private $toolstatus = "&alpha;";
   function getToolStatus() {
     return $this->toolstatus;
   }
-  
+
   function getToolInfo() {
     $info = $this->toolname . " &ndash; v " . $this->toolversion . " " . $this->toolstatus;
     if ($this->toolacronym != '') {
@@ -49,15 +49,15 @@ class GeoIRI {
     }
     return $info;
   }
-  
+
   private $dsn = array(
-/*  
+/*
         'phptype' => 'pgsql',
         'username' => 'geoiri',
         'password' => 'geoiri',
         'hostspec' => 'localhost',
         'database' => 'geoiri'
-*/        
+*/
         'host' => 'localhost',
         'port' => '5432',
         'dbname' => 'geoiri',
@@ -75,7 +75,7 @@ class GeoIRI {
     $this->dsn['password'] = $password;
     $this->dsn['database'] = $database;
     $this->dsn['hostspec'] = $hostspec;
-*/    
+*/
     $this->dsn['host'] = $host;
     $this->dsn['port'] = $port;
     $this->dsn['dbname'] = $dbname;
@@ -89,9 +89,9 @@ class GeoIRI {
 
   private $idUri = null;
   private $docUri = null;
-  
+
   private $page = null;
-  
+
   private $ns = array(
       "xsd" => "http://www.w3.org/2001/XMLSchema#",
       "rdf" => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -110,7 +110,7 @@ class GeoIRI {
       "mt"  => "http://www.iana.org/assignments/media-types/",
       "void" => "http://rdfs.org/ns/void#"
   );
-  
+
   private $geouris = array(
       "geouri" => array("Geo URI", "geo:",";u=0;crs=wgs84"),
       "geohash" => array("geohash.org", "http://geohash.org/",""),
@@ -118,16 +118,16 @@ class GeoIRI {
   );
 
 // URL/path of the XSLT that generates the HTML presentation of the geometry from its RDF/XML representation.
-// The default value for this variable is set in function save().  
-  
+// The default value for this variable is set in function save().
+
   private $xsluri = null;
 
-// Use this function to change the path of the XSLT and/or to use a different XSLT.  
-  
+// Use this function to change the path of the XSLT and/or to use a different XSLT.
+
   function setXSLT4HTML($url) {
     $this->xsluri = $url;
   }
-  
+
   private function setGeoURIs() {
     if ($this->geometry != null && ( count($this->geometry->coordinates) == 2 || count($this->geometry->coordinates) == 3 ) && strtolower($this->geometry->type) == "point") {
     foreach ($this->geouris as $k => $v) {
@@ -156,7 +156,7 @@ class GeoIRI {
     }
     }
   }
-  
+
   private $fileFormats = array(
       "html" => array("HTML", "text/html", "", "http://www.w3.org/TR/html5/"),
       "rdf" => array("RDF/XML", "application/rdf+xml", "", "http://www.w3.org/TR/rdf-syntax-grammar/"),
@@ -196,12 +196,12 @@ class GeoIRI {
 
   private function getEncodings() {
     $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*  
+/*
     $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
     if (PEAR::isError($mdb2)) {
       die($mdb2->getMessage());
     }
-*/    
+*/
     $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
     if (!$res || pg_num_rows($res) == 0) {
       header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
@@ -215,7 +215,7 @@ class GeoIRI {
       $this->createPage404();
       exit($this->page);
     }
-*/    
+*/
     while ($row = pg_fetch_row($res)) {
 //    while (($row = $res->fetchRow())) {
       $matches = array();
@@ -226,12 +226,12 @@ class GeoIRI {
       }
     }
     $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*    
+/*
     $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
     if (PEAR::isError($mdb2)) {
       die($mdb2->getMessage());
     }
-*/    
+*/
     $string = $this->georep;
     $srs = $this->srs;
     $defsrs = $this->defsrs;
@@ -275,7 +275,7 @@ class GeoIRI {
       $this->createPage404();
       exit($this->page);
     }
-/*    
+/*
     $res = & $mdb2->query("SELECT " . join(",", $call));
 // Always check that result is not an error
     if (PEAR::isError($res)) {
@@ -283,7 +283,7 @@ class GeoIRI {
       $this->createPage404();
       exit($this->page);
     }
-*/    
+*/
     while ($row = pg_fetch_assoc($res)) {
 //    while (($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC))) {
       foreach ($row as $name => $value) {
@@ -410,7 +410,7 @@ class GeoIRI {
         $this->format["rdf"] .= '
     <rdfs:comment xml:lang="en">' . $v[2] . '</rdfs:comment>';
       }
-      $this->format["rdf"] .= '  
+      $this->format["rdf"] .= '
     <dcterms:description xml:lang="en">' . $v[0] . ' document about the following WKT-encoded geometry: ' . $this->format["wkt"] . ' &#x2013; EPSG:' . $srs . $srsdescr . '</dcterms:description>
     <dcterms:format rdf:parseType="Resource">
       <rdf:value rdf:datatype="' . $ns["dcterms"] . 'IMT">' . $v[1] . '</rdf:value>
@@ -426,7 +426,7 @@ class GeoIRI {
 /*
     <owl:sameAs rdf:resource="' . $idUri . '#wkt-geosparql"/>
     <owl:sameAs rdf:resource="' . $idUri . '#gml-geosparql"/>' . "\n";
-*/    
+*/
     $this->format["rdf"] .= $sameas["wgs84"];
     $this->format["rdf"] .= $sameas["schema.org"];
     $this->format["rdf"] .= $sameas["geopoint"];
@@ -449,7 +449,7 @@ class GeoIRI {
     $geojsonas4326 = $this->format["geojsonas4326"];
 // If using OpenLayers
     $geojsonassmp  = $this->format["geojsonassmp"];
-/*    
+/*
     $htmlTitle = '<h1 id="title" title="Geometry encoded as Well-Known Text">Geometry (WKT): <br/><code title="' . $this->format["wkt"] . '">' . $this->format["wkt"] . '</code></h1><h2>Coordinate reference system: EPSG:' . $srs . $srsdescr . '</h2>';
     $htmlTitleHead = 'Geometry (WKT): ' . $this->format["wkt"] . ' &ndash; EPSG:' . $srs . $srsdescr;
     $toolInfo = $this->getToolInfo();
@@ -464,8 +464,8 @@ class GeoIRI {
 
     $formatList = join(" ",$altFormats);
 */
-// HTML presentation    
-    
+// HTML presentation
+
     $xml = new DOMDocument;
     $xml->loadXML($this->format["rdf"],LIBXML_NOENT|LIBXML_NSCLEAN);
 
@@ -498,13 +498,13 @@ class GeoIRI {
     $this->getHttpParams();
     if ($this->georep == null) {
       if ($this->srs == null) {
-        $mdb2 = pg_connect($this->getConnectionString) or die();
+        $mdb2 = pg_connect($this->getConnectionString()) or die();
 /*
         $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
         if (PEAR::isError($mdb2)) {
           die($mdb2->getMessage());
         }
-*/        
+*/
         $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext") or die();
 //        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext");
         if (!$res) {
@@ -517,12 +517,12 @@ class GeoIRI {
           $subsets = null;
           $subsetsUri = null;
           $result = '<?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF 
-  xmlns:rdf="' . $this->ns["rdf"] . '" 
-  xmlns:dcterms="' . $this->ns["dcterms"] . '" 
-  xmlns:foaf="' . $this->ns["foaf"] . '" 
+<rdf:RDF
+  xmlns:rdf="' . $this->ns["rdf"] . '"
+  xmlns:dcterms="' . $this->ns["dcterms"] . '"
+  xmlns:foaf="' . $this->ns["foaf"] . '"
   xmlns:void="' . $this->ns["void"] . '">
-  <void:DatasetDescription rdf:about="' . $docUri . '">            
+  <void:DatasetDescription rdf:about="' . $docUri . '">
     <foaf:primaryTopic rdf:resource="' . $idUri . '"/>
   </void:DatasetDescription>
   <void:Dataset rdf:about="' . $idUri . '">
@@ -539,13 +539,13 @@ class GeoIRI {
         }
       }
       else {
-        $mdb2 = pg_connect($this->getConnectionString) or die();
-/*        
+        $mdb2 = pg_connect($this->getConnectionString()) or die();
+/*
         $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
         if (PEAR::isError($mdb2)) {
           die($mdb2->getMessage());
         }
-*/        
+*/
         $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext") or die();
 //        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
         if (!$res || pg_num_rows($res) == 0) {
@@ -589,12 +589,12 @@ class GeoIRI {
         </void:Dataset>';
         }
         $result = '<?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF 
-  xmlns:rdf="' . $this->ns["rdf"] . '" 
-  xmlns:dcterms="' . $this->ns["dcterms"] . '" 
-  xmlns:foaf="' . $this->ns["foaf"] . '" 
+<rdf:RDF
+  xmlns:rdf="' . $this->ns["rdf"] . '"
+  xmlns:dcterms="' . $this->ns["dcterms"] . '"
+  xmlns:foaf="' . $this->ns["foaf"] . '"
   xmlns:void="' . $this->ns["void"] . '">
-  <void:DatasetDescription rdf:about="' . $docUri . '">        
+  <void:DatasetDescription rdf:about="' . $docUri . '">
     <foaf:primaryTopic rdf:resource="' . $idUri . '"/>
   </void:DatasetDescription>
   <void:Dataset rdf:about="' . $idUri . '">
@@ -701,7 +701,7 @@ class GeoIRI {
     $output .= '</div></div></div></body></html>';
     $this->page = $output;
   }
-  
+
   function createPage300($content) {
     $pageTitle = "300 Multiple Choices";
     $this->createPage($lang = 'en', $pageTitle, $css = array(), $cssCode = null, $js = array(), $jsCode = null, $content);
@@ -709,13 +709,13 @@ class GeoIRI {
 
   function createPage400() {
     $pageTitle = "400 Bad Request";
-    $content = "Your browser (or proxy) sent a request that this server could not understand."; 
+    $content = "Your browser (or proxy) sent a request that this server could not understand.";
     $this->createPage($lang = 'en', $pageTitle, $css = array(), $cssCode = null, $js = array(), $jsCode = null, $content);
   }
 
   function createPage404() {
     $pageTitle = "404 Not Found";
-    $content = "The requested URL " . $_SERVER["REQUEST_URI"] . " was not found on this server."; 
+    $content = "The requested URL " . $_SERVER["REQUEST_URI"] . " was not found on this server.";
     $this->createPage($lang = 'en', $pageTitle, $css = array(), $cssCode = null, $js = array(), $jsCode = null, $content);
   }
 
