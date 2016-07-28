@@ -7,6 +7,8 @@
 
 **************************************************************************/
 
+error_reporting(0);
+
 // If using conNeg = 3.0.0:
 use ptlis\ConNeg\Negotiate;
 // If using conNeg < 3.0.0:
@@ -106,6 +108,7 @@ class GeoIRI {
       "sf" => "http://www.opengis.net/ont/sf#",
       "gml" => "http://www.opengis.net/gml",
       "kml" => "http://www.opengis.net/kml/2.2",
+      "svg" => "http://www.w3.org/2000/svg",
 //      "mt"  => "http://purl.org/NET/mediatypes/",
       "mt"  => "http://www.iana.org/assignments/media-types/",
       "void" => "http://rdfs.org/ns/void#"
@@ -170,10 +173,10 @@ class GeoIRI {
       "kml" => array("KML", "application/vnd.google-earth.kml+xml", "Keyhole Markup Language", "http://www.opengeospatial.org/standards/kml/"),
 //      "kmz" => array("KMZ", "application/vnd.google-earth.kmz", "zipped KML", ""),
 //      "json" => array("GeoJSON", "application/json", "", "http://www.geojson.org/geojson-spec.html")
-      "json" => array("GeoJSON", "application/vnd.geo+json", "", "http://www.geojson.org/geojson-spec.html")
-//      "svg" => array("SVG", "image/svg+xml", "Spatial Vector Graphics", "http://www.w3.org/TR/SVG/")
+      "json" => array("GeoJSON", "application/vnd.geo+json", "", "http://www.geojson.org/geojson-spec.html"),
+      "svg" => array("SVG", "image/svg+xml", "Spatial Vector Graphics", "http://www.w3.org/TR/SVG/")
   );
-  private $availableFileFormats = array("html", "rdf", "nt", "ttl", "n3", "jsonld", "txt", "gml", "json");
+  private $availableFileFormats = array("html", "rdf", "nt", "ttl", "n3", "jsonld", "txt");
 //  private $availableFileFormats = array("html", "rdf", "nt", "ttl", "n3", "txt", "gml", "svg", "json");
   private $defsrs = 4326;
   private $SMPsrs = 3857;
@@ -251,15 +254,65 @@ class GeoIRI {
     $call["geojsonas4326"] = "ST_AsGeoJSON(1,ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")," . $precision . ",4) AS geojsonas4326";
     $call["geojsonassmp"]  = "ST_AsGeoJSON(1,ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $SMPsrs . ")," . $precision . ",4) AS geojsonassmp";
     $call["geohash"] = "ST_GeoHash(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS geohash";
-//    $call["svg"] = "ST_AsSVG(ST_GeomFromText('" . $string . "'," . $srs . ")) AS svg";
+    $call["svg"] = "ST_AsSVG(ST_GeomFromText('" . $string . "'," . $srs . ")) AS svg";
+
+// Check whether the relevant geometry type is supported by GeoJSON
+
+//    $res = pg_query($mdb2, "SELECT " . $call["json"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["json"]))) {
+      $call["json"] = "'' AS json";
+    }
+
+//    $res = pg_query($mdb2, "SELECT " . $call["geojson"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["geojson"]))) {
+      $call["geojson"] = "'' AS geojson";
+    }
+
+//    $res = pg_query($mdb2, "SELECT " . $call["geojsonas4326"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["geojsonas4326"]))) {
+      $call["geojsonas4326"] = "'' AS geojsonas4326";
+    }
+
+//    $res = pg_query($mdb2, "SELECT " . $call["geojsonassmp"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["geojsonassmp"]))) {
+      $call["geojsonassmp"] = "'' AS geojsonassmp";
+    }
+
+// Check whether the relevant geometry type is supported by GML
+
+//    $res = pg_query($mdb2, "SELECT " . $call["gml"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["gml"]))) {
+      $call["gml"] = "'' AS gml";
+    }
 
 // Check whether the relevant geometry type is supported by KML
 
-    $res = pg_query($mdb2, "SELECT " . $call["kml"]);
+//    $res = pg_query($mdb2, "SELECT " . $call["kml"]);
 // Always check that result is not an error
-    if (!$res) {
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["kml"]))) {
       $call["kml"] = "'' AS kml";
     }
+
+// Check whether the relevant geometry type is supported by SVG
+
+//    $res = pg_query($mdb2, "SELECT " . $call["svg"]);
+// Always check that result is not an error
+//    if (!$res) {
+    if (!($res = pg_query($mdb2, "SELECT " . $call["svg"]))) {
+      $call["svg"] = "'' AS svg";
+    }
+
 /*
     $res = & $mdb2->query("SELECT " . $call["kml"]);
 // Always check that result is not an error
@@ -294,9 +347,19 @@ class GeoIRI {
     pg_close($mdb2);
 //    $mdb2->disconnect();
     $ns = $this->ns;
+    if ($this->format["gml"] != "") {
+      $this->availableFileFormats[] = "gml";
+    }
+    if ($this->format["json"] != "") {
+      $this->availableFileFormats[] = "json";
+    }
     if ($this->format["kml"] != "") {
       $this->availableFileFormats[] = "kml";
 //    $this->availableFileFormats[] = "kmz";
+    }
+    if ($this->format["svg"] != "") {
+// Uncomment to include SVG as one of the available formats.    
+//      $this->availableFileFormats[] = "svg";
     }
     $geometry = json_decode($this->format["geojsonas4326"]);
 //    $geometry = json_decode($this->format["geojsonassmp"]);
@@ -306,23 +369,27 @@ class GeoIRI {
     $this->format["txt"] = $this->format["wkt-geosparql"];
     $this->format["gml-geosparql"] = preg_replace("/\"urn:ogc:def:crs:EPSG[:]{1,2}([\d]+)\"/i", "\"http://www.opengis.net/def/crs/EPSG/0/$1\"", $this->format["gml"]);
     $this->format["gml-geosparql-with-ns"] = preg_replace("/^(<gml:[a-z]+)/i", "$1" . ' xmlns:gml="' . $ns["gml"] . '"', $this->format["gml-geosparql"]);
-    $this->format["kml"] = '<kml xmlns="' . $ns["kml"] . '"><Placemark><name>' . $this->format["wkt"] . '</name>' . $this->format["kml"] . '</Placemark></kml>';
+    $this->format["kml"] = '<kml xmlns="' . $ns["kml"] . '"><Placemark><name>Geometry (WKT): ' . $this->format["wkt"] . '</name>' . $this->format["kml"] . '</Placemark></kml>';
+// TBD: This needs to be fixed, to decide which should be the bounds to be used (here, those of WGS84 are hard-coded)
+    $this->format["svg"] = '<svg xmlns="' . $ns["svg"] . '" width="360" height="180"><path transform="translate(180,90)" d="' . $this->format["svg"] . '"/></svg>';
 
     $docUri = $this->docUri;
     $idUri = $this->idUri;
     $rdfNs = array("rdf", "rdfs", "owl", "xsd", "dcterms", "foaf", "prv", "gsp", "sf");
     $matches = array();
-    preg_match("/^<gml:([^\s]+)/", $this->format["gml"], $matches);
-    $ogcGeoType = $matches[1];
-    $rdfDt = array(
-        "wkt" => $this->ns["gsp"] . "wktLiteral",
-        "gml" => $this->ns["gsp"] . "gmlLiteral"
-    );
-    $this->format["ogc"]  = '  <sf:' . $ogcGeoType . ' rdf:about="' . $idUri . '#geosparql">' . "\n";
-    $this->format["ogc"] .= '    <gsp:asWKT rdf:datatype="' . $rdfDt["wkt"] . '"><![CDATA[' . $this->format["wkt-geosparql"] . ']]></gsp:asWKT>' . "\n";
-    $this->format["ogc"] .= '    <gsp:asGML rdf:datatype="' . $rdfDt["gml"] . '"><![CDATA[' . $this->format["gml-geosparql-with-ns"] . ']]></gsp:asGML>' . "\n";
-    $this->format["ogc"] .= '  </sf:' . $ogcGeoType . '>' . "\n";
-
+    $this->format["ogc"] = '';
+    if (trim($this->format["gml"]) != '') {
+      preg_match("/^<gml:([^\s]+)/", $this->format["gml"], $matches);
+      $ogcGeoType = $matches[1];
+      $rdfDt = array(
+          "wkt" => $this->ns["gsp"] . "wktLiteral",
+          "gml" => $this->ns["gsp"] . "gmlLiteral"
+      );
+      $this->format["ogc"]  = '  <sf:' . $ogcGeoType . ' rdf:about="' . $idUri . '#geosparql">' . "\n";
+      $this->format["ogc"] .= '    <gsp:asWKT rdf:datatype="' . $rdfDt["wkt"] . '"><![CDATA[' . $this->format["wkt-geosparql"] . ']]></gsp:asWKT>' . "\n";
+      $this->format["ogc"] .= '    <gsp:asGML rdf:datatype="' . $rdfDt["gml"] . '"><![CDATA[' . $this->format["gml-geosparql-with-ns"] . ']]></gsp:asGML>' . "\n";
+      $this->format["ogc"] .= '  </sf:' . $ogcGeoType . '>' . "\n";
+    }
     $sameas["geopoint"] = '';
     $sameas["geohash"] = '';
     $sameas["geouri"] = '';
@@ -330,61 +397,63 @@ class GeoIRI {
     $sameas["wgs84"] = '';
     $this->format["schema.org"] = '';
     $sameas["schema.org"] = '';
-    switch (strtolower($geometry->type)) {
-      case "point":
-        if (count($geometry->coordinates) > 1 && count($geometry->coordinates) < 4) {
-          foreach ($this->geouris as $k => $v) {
-            if (isset($v[3])) {
-              $sameas[$k] = '    <owl:sameAs rdf:resource="' . $v[3] . '"/>' . "\n";
+    if (trim($geometry) != '') {
+      switch (strtolower($geometry->type)) {
+        case "point":
+          if (count($geometry->coordinates) > 1 && count($geometry->coordinates) < 4) {
+            foreach ($this->geouris as $k => $v) {
+              if (isset($v[3])) {
+                $sameas[$k] = '    <owl:sameAs rdf:resource="' . $v[3] . '"/>' . "\n";
+              }
             }
+            $rdfNs[] = "geo";
+            $sameas["wgs84"] = '    <owl:sameAs rdf:resource="' . $idUri . '#wgs84"/>' . "\n";
+            $this->format["wgs84"] = '  <geo:Point rdf:about="' . $idUri . '#wgs84">' . "\n";
+            $this->format["wgs84"] .= '    <geo:lat_long rdf:datatype="' . $ns["xsd"] . 'string">' . $geometry->coordinates[1] . ',' . $geometry->coordinates[0] . '</geo:lat_long>' . "\n";
+            $this->format["wgs84"] .= '    <geo:lat rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[1] . '</geo:lat>' . "\n";
+            $this->format["wgs84"] .= '    <geo:long rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[0] . '</geo:long>' . "\n";
+            if (count($geometry->coordinates) == 3) {
+              $this->format["wgs84"] .= '    <geo:alt rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[2] . '</geo:alt>' . "\n";
+            }
+            $this->format["wgs84"] .= '  </geo:Point>' . "\n";
+            $rdfNs[] = "schema";
+            $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
+            $this->format["schema.org"] = '  <schema:GeoCoordinates rdf:about="' . $idUri . '#schema.org">' . "\n";
+            $this->format["schema.org"] .= '    <schema:latitude rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[1] . '</schema:latitude>' . "\n";
+            $this->format["schema.org"] .= '    <schema:longitude rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[0] . '</schema:longitude>' . "\n";
+            if (count($geometry->coordinates) == 3) {
+              $this->format["schema.org"] .= '    <schema:elevation rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[2] . '</schema:elevation>' . "\n";
+            }
+            $this->format["schema.org"] .= '  </schema:GeoCoordinates>' . "\n";
           }
-          $rdfNs[] = "geo";
-          $sameas["wgs84"] = '    <owl:sameAs rdf:resource="' . $idUri . '#wgs84"/>' . "\n";
-          $this->format["wgs84"] = '  <geo:Point rdf:about="' . $idUri . '#wgs84">' . "\n";
-          $this->format["wgs84"] .= '    <geo:lat_long rdf:datatype="' . $ns["xsd"] . 'string">' . $geometry->coordinates[1] . ',' . $geometry->coordinates[0] . '</geo:lat_long>' . "\n";
-          $this->format["wgs84"] .= '    <geo:lat rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[1] . '</geo:lat>' . "\n";
-          $this->format["wgs84"] .= '    <geo:long rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[0] . '</geo:long>' . "\n";
-          if (count($geometry->coordinates) == 3) {
-            $this->format["wgs84"] .= '    <geo:alt rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[2] . '</geo:alt>' . "\n";
+          break;
+        case "linestring":
+          if (count($geometry->coordinates[0]) == 2) {
+            $rdfNs[] = "schema";
+            $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
+            $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
+            $line = array();
+            foreach ($geometry->coordinates as $p) {
+              $line[] = join(" ", $p);
+            }
+            $this->format["schema.org"] .= '    <schema:line rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:line>' . "\n";
+            $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
           }
-          $this->format["wgs84"] .= '  </geo:Point>' . "\n";
-          $rdfNs[] = "schema";
-          $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
-          $this->format["schema.org"] = '  <schema:GeoCoordinates rdf:about="' . $idUri . '#schema.org">' . "\n";
-          $this->format["schema.org"] .= '    <schema:latitude rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[1] . '</schema:latitude>' . "\n";
-          $this->format["schema.org"] .= '    <schema:longitude rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[0] . '</schema:longitude>' . "\n";
-          if (count($geometry->coordinates) == 3) {
-            $this->format["schema.org"] .= '    <schema:elevation rdf:datatype="' . $ns["xsd"] . 'decimal">' . $geometry->coordinates[2] . '</schema:elevation>' . "\n";
+          break;
+        case "polygon":
+          if (count($geometry->coordinates) == 1) {
+            $rdfNs[] = "schema";
+            $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
+            $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
+            $line = array();
+            foreach ($geometry->coordinates[0] as $p) {
+              $line[] = join(" ", $p);
+            }
+            $this->format["schema.org"] .= '    <schema:polygon rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:polygon>' . "\n";
+            $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
           }
-          $this->format["schema.org"] .= '  </schema:GeoCoordinates>' . "\n";
-        }
-        break;
-      case "linestring":
-        if (count($geometry->coordinates[0]) == 2) {
-          $rdfNs[] = "schema";
-          $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
-          $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
-          $line = array();
-          foreach ($geometry->coordinates as $p) {
-            $line[] = join(" ", $p);
-          }
-          $this->format["schema.org"] .= '    <schema:line rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:line>' . "\n";
-          $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
-        }
-        break;
-      case "polygon":
-        if (count($geometry->coordinates) == 1) {
-          $rdfNs[] = "schema";
-          $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
-          $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
-          $line = array();
-          foreach ($geometry->coordinates[0] as $p) {
-            $line[] = join(" ", $p);
-          }
-          $this->format["schema.org"] .= '    <schema:polygon rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:polygon>' . "\n";
-          $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
-        }
-        break;
+          break;
+      }
     }
     $xmlns = array();
     foreach ($rdfNs as $prefix) {
@@ -419,10 +488,12 @@ class GeoIRI {
     <dcterms:conformsTo rdf:resource="' . $v[3] . '"/>
   </rdf:Description>' . "\n";
     }
-    $this->format["rdf"] .= '  <rdf:Description rdf:about="' . $idUri . '">
-    <foaf:primaryTopicOf rdf:resource="' . $docUri . '"/>
-    <rdfs:label xml:lang="en">Geometry (WKT): ' . $this->format["wkt"] . ' &#x2013; EPSG:' . $srs . $srsdescr . '</rdfs:label>
-    <owl:sameAs rdf:resource="' . $idUri . '#geosparql"/>' . "\n";
+    $this->format["rdf"] .= '  <rdf:Description rdf:about="' . $idUri . '">' . "\n";
+    $this->format["rdf"] .= '    <foaf:primaryTopicOf rdf:resource="' . $docUri . '"/>' . "\n";
+    $this->format["rdf"] .= '    <rdfs:label xml:lang="en">Geometry (WKT): ' . $this->format["wkt"] . ' &#x2013; EPSG:' . $srs . $srsdescr . '</rdfs:label>' . "\n";
+    if ($this->format["ogc"] != '') {
+      $this->format["rdf"] .= '      <owl:sameAs rdf:resource="' . $idUri . '#geosparql"/>' . "\n";
+    }
 /*
     <owl:sameAs rdf:resource="' . $idUri . '#wkt-geosparql"/>
     <owl:sameAs rdf:resource="' . $idUri . '#gml-geosparql"/>' . "\n";
