@@ -397,7 +397,8 @@ class GeoIRI {
     $sameas["wgs84"] = '';
     $this->format["schema.org"] = '';
     $sameas["schema.org"] = '';
-    if (trim($geometry) != '') {
+//    if (trim($geometry) != '') {
+    if (is_object($geometry) && isset($geometry->type) && isset($geometry->coordinates)) {
       switch (strtolower($geometry->type)) {
         case "point":
           if (count($geometry->coordinates) > 1 && count($geometry->coordinates) < 4) {
@@ -434,7 +435,7 @@ class GeoIRI {
             $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
             $line = array();
             foreach ($geometry->coordinates as $p) {
-              $line[] = join(" ", $p);
+              $line[] = join(" ", array_reverse($p));
             }
             $this->format["schema.org"] .= '    <schema:line rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:line>' . "\n";
             $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
@@ -447,7 +448,7 @@ class GeoIRI {
             $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
             $line = array();
             foreach ($geometry->coordinates[0] as $p) {
-              $line[] = join(" ", $p);
+              $line[] = join(" ", array_reverse($p));
             }
             $this->format["schema.org"] .= '    <schema:polygon rdf:datatype="' . $ns["xsd"] . 'string">' . join(" ", $line) . '</schema:polygon>' . "\n";
             $this->format["schema.org"] .= '  </schema:GeoShape>' . "\n";
@@ -500,7 +501,7 @@ class GeoIRI {
 */
     $this->format["rdf"] .= $sameas["wgs84"];
     $this->format["rdf"] .= $sameas["schema.org"];
-    $this->format["rdf"] .= $sameas["geopoint"];
+//    $this->format["rdf"] .= $sameas["geopoint"];
     $this->format["rdf"] .= $sameas["geohash"];
     $this->format["rdf"] .= $sameas["geouri"];
     $this->format["rdf"] .= '  </rdf:Description>' . "\n";
@@ -508,6 +509,23 @@ class GeoIRI {
     $this->format["rdf"] .= $this->format["ogc"] . $this->format["wgs84"] . $this->format["schema.org"];
     $this->format["rdf"] .= '</rdf:RDF>';
 
+// Setting namespace prefixes
+
+    EasyRdf_Namespace::set('adms', 'http://www.w3.org/ns/adms#');
+    EasyRdf_Namespace::set('cnt', 'http://www.w3.org/2011/content#');
+    EasyRdf_Namespace::set('dc', 'http://purl.org/dc/elements/1.1/');
+    EasyRdf_Namespace::set('dcat', 'http://www.w3.org/ns/dcat#');
+    EasyRdf_Namespace::set('dcterms', 'http://purl.org/dc/terms/');
+    EasyRdf_Namespace::set('dctype', 'http://purl.org/dc/dcmitype/');
+    EasyRdf_Namespace::set('foaf', 'http://xmlns.com/foaf/0.1/');
+    EasyRdf_Namespace::set('geo', 'http://www.w3.org/2003/01/geo/wgs84_pos#');
+    EasyRdf_Namespace::set('gsp', 'http://www.opengis.net/ont/geosparql#');
+    EasyRdf_Namespace::set('locn', 'http://www.w3.org/ns/locn#');
+    EasyRdf_Namespace::set('prov', 'http://www.w3.org/ns/prov#');
+    EasyRdf_Namespace::set('prv', 'http://purl.org/net/provenance/ns#');
+    EasyRdf_Namespace::set('schema', 'http://schema.org/');
+    EasyRdf_Namespace::set('sf', 'http://www.opengis.net/ont/sf#');
+    
     $graph = new EasyRdf_Graph;
     $graph->parse($this->format["rdf"], "rdfxml", $idUri);
 
@@ -541,9 +559,9 @@ class GeoIRI {
     $xml->loadXML($this->format["rdf"],LIBXML_NOENT|LIBXML_NSCLEAN);
 
     $xsl = new DOMDocument;
-	  $xsl->load($this->xsluri);
+    $xsl->load($this->xsluri);
 
-	  $proc = new XSLTProcessor;
+    $proc = new XSLTProcessor;
     $proc->importStyleSheet($xsl);
 
     $proc->setParameter("", "wkt", $string);
@@ -553,6 +571,21 @@ class GeoIRI {
     $proc->setParameter("", "geojsonassmp", $geojsonassmp);
     $this->format["html"] = $proc->transformToXML($xml);
 
+  }
+
+  private function createHttpLinkHeader($currentformat) {
+    $link = array();
+    $rel = null;
+    foreach ($this->availableFileFormats as $v) {
+      if ($v != null) {
+        $rel = 'alternate';
+        if ($v == $currentformat) {
+          $rel = 'self';
+        }
+        $link[] = '<' . $this->docUri . '.' . $v . ' >; rel="' . $rel . '"; title="' .  $this->fileFormats[$v][0] . ' document about the following WKT-encoded geometry: ' . $this->format["wkt"] . ' - EPSG:' . $this->srs . $srsdescr . '" ; type="' . $this->fileFormats[$v][1] . '"';
+      }
+    }
+    return join(', ', $link);
   }
 
   function save() {
@@ -698,7 +731,8 @@ class GeoIRI {
     if (count($this->candidateFormats) == 1) {
       if (in_array($this->candidateFormats[0],$this->availableFileFormats)) {
         $contentType = $formatToType[$this->candidateFormats[0]];
-      } else {
+      } 
+      else {
         header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
         $this->createPage404();
         exit($this->page);
@@ -726,6 +760,7 @@ class GeoIRI {
           break;
         case 1:
           header("Content-type: " . $contentType);
+          header("Link: " . $this->createHttpLinkHeader($this->candidateFormats[0]));
 // The "if" statement is meant to specify how to deal with formats not natively supported by GeoIRI
 /*
           if ($contentType == "application/ld+json") {
