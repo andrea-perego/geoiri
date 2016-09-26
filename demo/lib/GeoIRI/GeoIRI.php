@@ -442,7 +442,7 @@ class GeoIRI {
           }
           break;
         case "polygon":
-          if (count($geometry->coordinates) == 1) {
+          if (count($geometry->coordinates) == 1 && count($geometry->coordinates[0][0]) == 2) {
             $rdfNs[] = "schema";
             $sameas["schema.org"] = '    <owl:sameAs rdf:resource="' . $idUri . '#schema.org"/>' . "\n";
             $this->format["schema.org"] = '  <schema:GeoShape rdf:about="' . $idUri . '#schema.org">' . "\n";
