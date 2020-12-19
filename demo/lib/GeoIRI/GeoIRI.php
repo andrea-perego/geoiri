@@ -2,7 +2,7 @@
 
 /*************************************************************************
 
-  Copyright (c) 2015-2016, Andrea Perego <http://about.me/andrea.perego>
+  Copyright (c) 2015-2020, Andrea Perego <http://about.me/andrea.perego>
   Licence: http://opensource.org/licenses/MIT
 
 **************************************************************************/
@@ -13,9 +13,6 @@ error_reporting(0);
 use ptlis\ConNeg\Negotiate;
 // If using conNeg < 3.0.0:
 //require_once('conNeg.inc.php');
-// If using EasyRDF < 0.7.0:
-//require_once('EasyRdf.php');
-//require_once('MDB2.php');
 
 class GeoIRI {
 
@@ -53,31 +50,17 @@ class GeoIRI {
   }
 
   private $dsn = array(
-/*
-        'phptype' => 'pgsql',
-        'username' => 'geoiri',
-        'password' => 'geoiri',
-        'hostspec' => 'localhost',
-        'database' => 'geoiri'
-*/
-        'host' => 'localhost',
-        'port' => '5432',
-        'dbname' => 'geoiri',
-        'user' => 'geoiri',
-        'password' => ''
+    'host' => 'localhost',
+    'port' => '5432',
+    'dbname' => 'geoiri',
+    'user' => 'geoiri',
+    'password' => ''
   );
+  
   private $dboptions = array(
-//        'debug' => 2,
-//        'portability' => MDB2_PORTABILITY_ALL,
   );
-//  function setDSN($username,$password,$database,$hostspec) {
+  
   function setDSN($user,$password,$dbname,$host,$port = 5432) {
-/*
-    $this->dsn['username'] = $username;
-    $this->dsn['password'] = $password;
-    $this->dsn['database'] = $database;
-    $this->dsn['hostspec'] = $hostspec;
-*/
     $this->dsn['host'] = $host;
     $this->dsn['port'] = $port;
     $this->dsn['dbname'] = $dbname;
@@ -95,29 +78,31 @@ class GeoIRI {
   private $page = null;
 
   private $ns = array(
-      "xsd" => "http://www.w3.org/2001/XMLSchema#",
-      "rdf" => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "rdfs" => "http://www.w3.org/2000/01/rdf-schema#",
-      "owl" => "http://www.w3.org/2002/07/owl#",
-      "dcterms" => "http://purl.org/dc/terms/",
-      "foaf" => "http://xmlns.com/foaf/0.1/",
-      "prv" => "http://purl.org/net/provenance/ns#",
-      "geo" => "http://www.w3.org/2003/01/geo/wgs84_pos#",
-      "schema" => "http://schema.org/",
-      "gsp" => "http://www.opengis.net/ont/geosparql#",
-      "sf" => "http://www.opengis.net/ont/sf#",
-      "gml" => "http://www.opengis.net/gml",
-      "kml" => "http://www.opengis.net/kml/2.2",
-      "svg" => "http://www.w3.org/2000/svg",
-//      "mt"  => "http://purl.org/NET/mediatypes/",
-      "mt"  => "http://www.iana.org/assignments/media-types/",
-      "void" => "http://rdfs.org/ns/void#"
+    "xsd" => "http://www.w3.org/2001/XMLSchema#",
+    "rdf" => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs" => "http://www.w3.org/2000/01/rdf-schema#",
+    "owl" => "http://www.w3.org/2002/07/owl#",
+    "dcat" => "http://www.w3.org/ns/dcat#",
+    "dcterms" => "http://purl.org/dc/terms/",
+    "foaf" => "http://xmlns.com/foaf/0.1/",
+    "prv" => "http://purl.org/net/provenance/ns#",
+    "geo" => "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "schema" => "http://schema.org/",
+    "gsp" => "http://www.opengis.net/ont/geosparql#",
+    "sf" => "http://www.opengis.net/ont/sf#",
+    "gml" => "http://www.opengis.net/gml",
+    "kml" => "http://www.opengis.net/kml/2.2",
+    "locn" => "http://www.w3.org/ns/locn#",
+    "svg" => "http://www.w3.org/2000/svg",
+//    "mt"  => "http://purl.org/NET/mediatypes/",
+    "mt"  => "http://www.iana.org/assignments/media-types/",
+    "void" => "http://rdfs.org/ns/void#"
   );
 
   private $geouris = array(
-      "geouri" => array("Geo URI", "geo:",";u=0;crs=wgs84"),
-      "geohash" => array("geohash.org", "http://geohash.org/",""),
-      "geopoint" => array("PlaceTime.com", "http://placetime.com/geopoint/wgs84/","")
+    "geouri" => array("Geo URI", "geo:",";u=0;crs=wgs84"),
+    "geohash" => array("geohash.org", "http://geohash.org/",""),
+    "geopoint" => array("PlaceTime.com", "http://placetime.com/geopoint/wgs84/","")
   );
 
 // URL/path of the XSLT that generates the HTML presentation of the geometry from its RDF/XML representation.
@@ -161,21 +146,26 @@ class GeoIRI {
   }
 
   private $fileFormats = array(
-      "html" => array("HTML", "text/html", "", "http://www.w3.org/TR/html5/"),
-      "rdf" => array("RDF/XML", "application/rdf+xml", "", "http://www.w3.org/TR/rdf-syntax-grammar/"),
-//      "nt" => array("N-Triples", "text/plain", "", "http://www.w3.org/TR/n-triples/"),
-      "nt" => array("N-Triples", "application/n-triples", "", "http://www.w3.org/TR/n-triples/"),
-      "ttl" => array("Turtle", "text/turtle", "", "http://www.w3.org/TR/turtle/"),
-      "n3" => array("N3", "text/n3", "Notation 3", "http://www.w3.org/TeamSubmission/n3/"),
-      "jsonld" => array("JSON-LD", "application/ld+json", "JSON Linked Data", "http://www.w3.org/TR/json-ld/"),
-      "txt" => array("WKT (GeoSPARQL)", "text/plain", "Well-Known Text", "http://www.opengeospatial.org/standards/sfa/"),
-      "gml" => array("GML (GeoSPARQL)", "application/gml+xml", "Geography Markup Language", "http://www.opengeospatial.org/standards/gml/"),
-      "kml" => array("KML", "application/vnd.google-earth.kml+xml", "Keyhole Markup Language", "http://www.opengeospatial.org/standards/kml/"),
-//      "kmz" => array("KMZ", "application/vnd.google-earth.kmz", "zipped KML", ""),
-//      "json" => array("GeoJSON", "application/json", "", "http://www.geojson.org/geojson-spec.html")
-      "json" => array("GeoJSON", "application/vnd.geo+json", "", "http://www.geojson.org/geojson-spec.html"),
-      "svg" => array("SVG", "image/svg+xml", "Spatial Vector Graphics", "http://www.w3.org/TR/SVG/")
+    "html" => array("HTML", "text/html", "", "http://www.w3.org/TR/html5/"),
+    "rdf" => array("RDF/XML", "application/rdf+xml", "", "http://www.w3.org/TR/rdf-syntax-grammar/"),
+//    "nt" => array("N-Triples", "text/plain", "", "http://www.w3.org/TR/n-triples/"),
+    "nt" => array("N-Triples", "application/n-triples", "", "http://www.w3.org/TR/n-triples/"),
+    "ttl" => array("Turtle", "text/turtle", "", "http://www.w3.org/TR/turtle/"),
+    "n3" => array("N3", "text/n3", "Notation 3", "http://www.w3.org/TeamSubmission/n3/"),
+    "jsonld" => array("JSON-LD", "application/ld+json", "JSON Linked Data", "http://www.w3.org/TR/json-ld/"),
+    "txt" => array("WKT (GeoSPARQL)", "text/plain", "Well-Known Text", "http://www.opengeospatial.org/standards/sfa/"),
+    "gml" => array("GML (GeoSPARQL)", "application/gml+xml", "Geography Markup Language", "http://www.opengeospatial.org/standards/gml/"),
+    "kml" => array("KML", "application/vnd.google-earth.kml+xml", "Keyhole Markup Language", "http://www.opengeospatial.org/standards/kml/"),
+//    "kmz" => array("KMZ", "application/vnd.google-earth.kmz", "zipped KML", ""),
+//    "json" => array("GeoJSON", "application/json", "", "http://www.geojson.org/geojson-spec.html")
+    "json" => array("GeoJSON", "application/vnd.geo+json", "", "http://www.geojson.org/geojson-spec.html"),
+//    "json" => array("GeoJSON", "application/geo+json", "", "https://tools.ietf.org/html/rfc7946"),
+//    "geojson" => array("GeoJSON", "application/json", "", "http://www.geojson.org/geojson-spec.html")
+    "geojson" => array("GeoJSON", "application/vnd.geo+json", "", "http://www.geojson.org/geojson-spec.html"),
+//    "geojson" => array("GeoJSON", "application/geo+json", "", "https://tools.ietf.org/html/rfc7946"),
+    "svg" => array("SVG", "image/svg+xml", "Spatial Vector Graphics", "http://www.w3.org/TR/SVG/")
   );
+
   private $availableFileFormats = array("html", "rdf", "nt", "ttl", "n3", "jsonld", "txt");
 //  private $availableFileFormats = array("html", "rdf", "nt", "ttl", "n3", "txt", "gml", "svg", "json");
   private $defsrs = 4326;
@@ -198,29 +188,14 @@ class GeoIRI {
   }
 
   private function getEncodings() {
-    $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*
-    $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
-    if (PEAR::isError($mdb2)) {
-      die($mdb2->getMessage());
-    }
-*/
-    $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
+    $dbconn = pg_connect($this->getConnectionString()) or die();
+    $res = pg_query($dbconn, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
     if (!$res || pg_num_rows($res) == 0) {
       header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
       $this->createPage404();
       exit($this->page);
     }
-/*
-    $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
-    if (PEAR::isError($res) || $res->numRows() == 0) {
-      header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-      $this->createPage404();
-      exit($this->page);
-    }
-*/
     while ($row = pg_fetch_row($res)) {
-//    while (($row = $res->fetchRow())) {
       $matches = array();
       preg_match("/^[^\[]+\[\"([^\"]+)\"/",$row[1],$matches);
       $srsdescr = null;
@@ -228,13 +203,7 @@ class GeoIRI {
         $srsdescr = " (" . $matches[1] . ")";
       }
     }
-    $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*
-    $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
-    if (PEAR::isError($mdb2)) {
-      die($mdb2->getMessage());
-    }
-*/
+    $dbconn = pg_connect($this->getConnectionString()) or die();
     $string = $this->georep;
     $srs = $this->srs;
     $defsrs = $this->defsrs;
@@ -245,7 +214,7 @@ class GeoIRI {
     $call["hexewkb"] = "ST_AsHEXEWKB(ST_GeomFromText('" . $string . "'," . $srs . ")) AS hexewkb";
     $call["wkt"] = "ST_AsText(ST_GeomFromText('" . $string . "'," . $srs . ")) AS wkt";
 //    $call["txt"] = "ST_AsText(ST_GeomFromText('" . $string . "'," . $srs . ")) AS txt";
-    $call["wktas4236"] = "ST_AsText(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS wktAs4236";
+    $call["wktas4326"] = "ST_AsText(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS wktAs4326";
     $call["ewkt"] = "ST_AsEWKT(ST_GeomFromText('" . $string . "'," . $srs . ")) AS ewkt";
     $call["gml"] = "ST_AsGML(3,ST_GeomFromText('" . $string . "'," . $srs . ")," . $precision . ",1) AS gml";
     $call["kml"] = "ST_AsKML(ST_GeomFromText('" . $string . "'," . $srs . ")) AS kml";
@@ -254,98 +223,38 @@ class GeoIRI {
     $call["geojsonas4326"] = "ST_AsGeoJSON(1,ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")," . $precision . ",4) AS geojsonas4326";
     $call["geojsonassmp"]  = "ST_AsGeoJSON(1,ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $SMPsrs . ")," . $precision . ",4) AS geojsonassmp";
     $call["geohash"] = "ST_GeoHash(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS geohash";
-    $call["svg"] = "ST_AsSVG(ST_GeomFromText('" . $string . "'," . $srs . ")) AS svg";
+//    $call["svg"] = "ST_AsSVG(ST_GeomFromText('" . $string . "'," . $srs . ")) AS svg";
+    $call["svgas4326"] = "ST_AsSVG(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS svgAs4326";
+    $call["bbox"] = "ST_Extent(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . ")) AS bbox";
+    $call["bboxaspolygon"] = "ST_AsText(ST_SetSRID(ST_Extent(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . "))," . $defsrs . ")) AS bboxAsPolygon";
+    $call["centroid"] = "ST_AsText(ST_Centroid(ST_Transform(ST_GeomFromText('" . $string . "'," . $srs . ")," . $defsrs . "))) AS centroid";
+
 
 // Check whether the relevant geometry type is supported by GeoJSON
 
-//    $res = pg_query($mdb2, "SELECT " . $call["json"]);
+    foreach ($call as $k => $v) {
 // Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["json"]))) {
-      $call["json"] = "'' AS json";
+      if (!($res = pg_query($dbconn, "SELECT " . $call[$k]))) {
+        $call[$k] = "'' AS " . $k;
+      }
     }
 
-//    $res = pg_query($mdb2, "SELECT " . $call["geojson"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["geojson"]))) {
-      $call["geojson"] = "'' AS geojson";
-    }
-
-//    $res = pg_query($mdb2, "SELECT " . $call["geojsonas4326"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["geojsonas4326"]))) {
-      $call["geojsonas4326"] = "'' AS geojsonas4326";
-    }
-
-//    $res = pg_query($mdb2, "SELECT " . $call["geojsonassmp"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["geojsonassmp"]))) {
-      $call["geojsonassmp"] = "'' AS geojsonassmp";
-    }
-
-// Check whether the relevant geometry type is supported by GML
-
-//    $res = pg_query($mdb2, "SELECT " . $call["gml"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["gml"]))) {
-      $call["gml"] = "'' AS gml";
-    }
-
-// Check whether the relevant geometry type is supported by KML
-
-//    $res = pg_query($mdb2, "SELECT " . $call["kml"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["kml"]))) {
-      $call["kml"] = "'' AS kml";
-    }
-
-// Check whether the relevant geometry type is supported by SVG
-
-//    $res = pg_query($mdb2, "SELECT " . $call["svg"]);
-// Always check that result is not an error
-//    if (!$res) {
-    if (!($res = pg_query($mdb2, "SELECT " . $call["svg"]))) {
-      $call["svg"] = "'' AS svg";
-    }
-
-/*
-    $res = & $mdb2->query("SELECT " . $call["kml"]);
-// Always check that result is not an error
-    if (PEAR::isError($res)) {
-      $call["kml"] = "'' AS kml";
-    }
-*/
-
-    $res = pg_query($mdb2, "SELECT " . join(",", $call));
+    $res = pg_query($dbconn, "SELECT " . join(",", $call));
 // Always check that result is not an error
     if (!$res) {
       header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
       $this->createPage404();
       exit($this->page);
     }
-/*
-    $res = & $mdb2->query("SELECT " . join(",", $call));
-// Always check that result is not an error
-    if (PEAR::isError($res)) {
-      header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-      $this->createPage404();
-      exit($this->page);
-    }
-*/
+
     while ($row = pg_fetch_assoc($res)) {
-//    while (($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC))) {
       foreach ($row as $name => $value) {
         $this->format[$name] = $value;
       }
     }
+
 // Disconnect
-    pg_close($mdb2);
-//    $mdb2->disconnect();
+    pg_close($dbconn);
     $ns = $this->ns;
     if ($this->format["gml"] != "") {
       $this->availableFileFormats[] = "gml";
@@ -357,10 +266,10 @@ class GeoIRI {
       $this->availableFileFormats[] = "kml";
 //    $this->availableFileFormats[] = "kmz";
     }
-    if ($this->format["svg"] != "") {
-// Uncomment to include SVG as one of the available formats.    
+// Uncomment to include SVG as one of the available formats.
+//    if ($this->format["svg"] != "") {
 //      $this->availableFileFormats[] = "svg";
-    }
+//    }
     $geometry = json_decode($this->format["geojsonas4326"]);
 //    $geometry = json_decode($this->format["geojsonassmp"]);
     $this->geometry = $geometry;
@@ -371,11 +280,17 @@ class GeoIRI {
     $this->format["gml-geosparql-with-ns"] = preg_replace("/^(<gml:[a-z]+)/i", "$1" . ' xmlns:gml="' . $ns["gml"] . '"', $this->format["gml-geosparql"]);
     $this->format["kml"] = '<kml xmlns="' . $ns["kml"] . '"><Placemark><name>Geometry (WKT): ' . $this->format["wkt"] . '</name>' . $this->format["kml"] . '</Placemark></kml>';
 // TBD: This needs to be fixed, to decide which should be the bounds to be used (here, those of WGS84 are hard-coded)
-    $this->format["svg"] = '<svg xmlns="' . $ns["svg"] . '" width="360" height="180"><path transform="translate(180,90)" d="' . $this->format["svg"] . '"/></svg>';
+//    $this->format["svg"] = '<svg xmlns="' . $ns["svg"] . '" width="360" height="180"><path transform="translate(180,90)" d="' . $this->format["svg"] . '"/></svg>';
+    $this->format["svgas4326"] = '<svg xmlns="' . $ns["svg"] . '" width="360" height="180"><path transform="translate(180,90)" d="' . $this->format["svgas4326"] . '"/></svg>';
+
+/*
+    $this->format["svg"] = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="1024" height="768" preserveAspectRatio="xMinYMin" viewBox="-90 -90 180 180" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#176C65" fill-opacity="0.5" stroke="#ffffff" stroke-width="0.01" d="' . $this->format["svg"] . '"/></svg>';
+*/
+    $this->format["svgas4326"] = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="1024" height="768" preserveAspectRatio="xMinYMin" viewBox="-90 -90 180 180" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#176C65" fill-opacity="0.5" stroke="#ffffff" stroke-width="0.01" d="' . $this->format["svgas4326"] . '"/></svg>';
 
     $docUri = $this->docUri;
     $idUri = $this->idUri;
-    $rdfNs = array("rdf", "rdfs", "owl", "xsd", "dcterms", "foaf", "prv", "gsp", "sf");
+    $rdfNs = array("rdf", "rdfs", "owl", "xsd", "dcat", "dcterms", "foaf", "prv", "gsp", "sf");
     $matches = array();
     $this->format["ogc"] = '';
     if (trim($this->format["gml"]) != '') {
@@ -490,6 +405,13 @@ class GeoIRI {
   </rdf:Description>' . "\n";
     }
     $this->format["rdf"] .= '  <rdf:Description rdf:about="' . $idUri . '">' . "\n";
+    if ($srs != $defsrs) {
+      $this->format["rdf"] .= '    <owl:sameAs rdf:resource="' . dirname(dirname($idUri)) . '/' . $defsrs . '/' . str_replace(' ','_',strtolower($this->format['wktas4326'])) . '"/>' . "\n";
+    }
+    $this->format["rdf"] .= '    <dcat:bbox rdf:datatype="' . $ns["gsp"] . 'wktLiteral">' . strtolower($this->format['bbox']) . '</dcat:bbox>' . "\n";
+//    $this->format["rdf"] .= '    <dcat:bbox rdf:resource="' . dirname(dirname($idUri)) . '/' . $defsrs . '/' . str_replace(' ','_',strtolower($this->format['bboxaspolygon'])) . '"/>' . "\n";
+    $this->format["rdf"] .= '    <dcat:centroid rdf:datatype="' . $ns["gsp"] . 'wktLiteral">' . strtolower($this->format['centroid']) . '</dcat:centroid>' . "\n";
+//    $this->format["rdf"] .= '    <dcat:centroid rdf:resource="' . dirname(dirname($idUri)) . '/' . $defsrs . '/' . str_replace(' ','_',strtolower($this->format['centroid'])) . '"/>' . "\n";
     $this->format["rdf"] .= '    <foaf:primaryTopicOf rdf:resource="' . $docUri . '"/>' . "\n";
     $this->format["rdf"] .= '    <rdfs:label xml:lang="en">Geometry (WKT): ' . $this->format["wkt"] . ' &#x2013; EPSG:' . $srs . $srsdescr . '</rdfs:label>' . "\n";
     if ($this->format["ogc"] != '') {
@@ -511,24 +433,23 @@ class GeoIRI {
 
 // Setting namespace prefixes
 
-    EasyRdf_Namespace::set('adms', 'http://www.w3.org/ns/adms#');
-    EasyRdf_Namespace::set('cnt', 'http://www.w3.org/2011/content#');
-    EasyRdf_Namespace::set('dc', 'http://purl.org/dc/elements/1.1/');
-    EasyRdf_Namespace::set('dcat', 'http://www.w3.org/ns/dcat#');
-    EasyRdf_Namespace::set('dcterms', 'http://purl.org/dc/terms/');
-    EasyRdf_Namespace::set('dctype', 'http://purl.org/dc/dcmitype/');
-    EasyRdf_Namespace::set('foaf', 'http://xmlns.com/foaf/0.1/');
-    EasyRdf_Namespace::set('geo', 'http://www.w3.org/2003/01/geo/wgs84_pos#');
-    EasyRdf_Namespace::set('gsp', 'http://www.opengis.net/ont/geosparql#');
-    EasyRdf_Namespace::set('locn', 'http://www.w3.org/ns/locn#');
-    EasyRdf_Namespace::set('prov', 'http://www.w3.org/ns/prov#');
-    EasyRdf_Namespace::set('prv', 'http://purl.org/net/provenance/ns#');
-    EasyRdf_Namespace::set('schema', 'http://schema.org/');
-    EasyRdf_Namespace::set('sf', 'http://www.opengis.net/ont/sf#');
-    
-    $graph = new EasyRdf_Graph;
-    $graph->parse($this->format["rdf"], "rdfxml", $idUri);
+    \EasyRdf\RdfNamespace::set('adms', 'http://www.w3.org/ns/adms#');
+    \EasyRdf\RdfNamespace::set('cnt', 'http://www.w3.org/2011/content#');
+    \EasyRdf\RdfNamespace::set('dc', 'http://purl.org/dc/elements/1.1/');
+    \EasyRdf\RdfNamespace::set('dcat', 'http://www.w3.org/ns/dcat#');
+    \EasyRdf\RdfNamespace::set('dcterms', 'http://purl.org/dc/terms/');
+    \EasyRdf\RdfNamespace::set('dctype', 'http://purl.org/dc/dcmitype/');
+    \EasyRdf\RdfNamespace::set('foaf', 'http://xmlns.com/foaf/0.1/');
+    \EasyRdf\RdfNamespace::set('geo', 'http://www.w3.org/2003/01/geo/wgs84_pos#');
+    \EasyRdf\RdfNamespace::set('gsp', 'http://www.opengis.net/ont/geosparql#');
+    \EasyRdf\RdfNamespace::set('locn', 'http://www.w3.org/ns/locn#');
+    \EasyRdf\RdfNamespace::set('prov', 'http://www.w3.org/ns/prov#');
+    \EasyRdf\RdfNamespace::set('prv', 'http://purl.org/net/provenance/ns#');
+    \EasyRdf\RdfNamespace::set('schema', 'http://schema.org/');
+    \EasyRdf\RdfNamespace::set('sf', 'http://www.opengis.net/ont/sf#');
 
+    $graph = new \EasyRdf\Graph;
+    $graph->parse($this->format["rdf"], "rdfxml", $idUri);
     $this->format["nt"] = $graph->serialise("ntriples");
     $this->format["ttl"] = $graph->serialise("turtle");
     $this->format["n3"] = $graph->serialise("n3");
@@ -538,21 +459,7 @@ class GeoIRI {
     $geojsonas4326 = $this->format["geojsonas4326"];
 // If using OpenLayers
     $geojsonassmp  = $this->format["geojsonassmp"];
-/*
-    $htmlTitle = '<h1 id="title" title="Geometry encoded as Well-Known Text">Geometry (WKT): <br/><code title="' . $this->format["wkt"] . '">' . $this->format["wkt"] . '</code></h1><h2>Coordinate reference system: EPSG:' . $srs . $srsdescr . '</h2>';
-    $htmlTitleHead = 'Geometry (WKT): ' . $this->format["wkt"] . ' &ndash; EPSG:' . $srs . $srsdescr;
-    $toolInfo = $this->getToolInfo();
-    $alternate = null;
-    $altFormats = array();
-    foreach ($this->availableFileFormats as $v) {
-      if ($v != null && $v != "html") {
-        $alternate .= '    <link rel="alternate" title="' .  $this->fileFormats[$v][0] . ' document about the following WKT-encoded geometry: ' . $this->format["wkt"] . ' - EPSG:' . $srs . $srsdescr . '" href="' . $docUri . '.' . $v . '" type="' . $this->fileFormats[$v][1] . '" />' . "\n";
-        $altFormats[] = '<a href="' . $docUri . '.' . $v . '" title="' . $this->fileFormats[$v][2] . '">' .  $this->fileFormats[$v][0] . '</a>';
-      }
-    }
 
-    $formatList = join(" ",$altFormats);
-*/
 // HTML presentation
 
     $xml = new DOMDocument;
@@ -574,6 +481,7 @@ class GeoIRI {
   }
 
   private function createHttpLinkHeader($currentformat) {
+    global $srsdescr;
     $link = array();
     $rel = null;
     foreach ($this->availableFileFormats as $v) {
@@ -602,17 +510,9 @@ class GeoIRI {
     $this->getHttpParams();
     if ($this->georep == null) {
       if ($this->srs == null) {
-        $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*
-        $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
-        if (PEAR::isError($mdb2)) {
-          die($mdb2->getMessage());
-        }
-*/
-        $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext") or die();
-//        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext");
+        $dbconn = pg_connect($this->getConnectionString()) or die();
+        $res = pg_query($dbconn, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS ORDER BY srid, srtext") or die();
         if (!$res) {
-//        if (PEAR::isError($res)) {
           header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
           $this->createPage404();
           exit($this->page);
@@ -643,23 +543,14 @@ class GeoIRI {
         }
       }
       else {
-        $mdb2 = pg_connect($this->getConnectionString()) or die();
-/*
-        $mdb2 = & MDB2::connect($this->dsn, $this->dboptions);
-        if (PEAR::isError($mdb2)) {
-          die($mdb2->getMessage());
-        }
-*/
-        $res = pg_query($mdb2, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext") or die();
-//        $res = & $mdb2->query("SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext");
+        $dbconn = pg_connect($this->getConnectionString()) or die();
+        $res = pg_query($dbconn, "SELECT srid, srtext FROM PUBLIC.SPATIAL_REF_SYS WHERE srid = " . $this->srs . " ORDER BY srid, srtext") or die();
         if (!$res || pg_num_rows($res) == 0) {
-//        if (PEAR::isError($res) || $res->numRows() == 0) {
           header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
           $this->createPage404();
           exit($this->page);
         }
         while ($row = pg_fetch_row($res)) {
-//        while (($row = $res->fetchRow())) {
           preg_match("/^[^\[]+\[\"([^\"]+)\"/",$row[1],$matches);
           $srsdescr = null;
           if (isset($matches[1])) {
@@ -731,7 +622,7 @@ class GeoIRI {
     if (count($this->candidateFormats) == 1) {
       if (in_array($this->candidateFormats[0],$this->availableFileFormats)) {
         $contentType = $formatToType[$this->candidateFormats[0]];
-      } 
+      }
       else {
         header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
         $this->createPage404();
